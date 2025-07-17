@@ -1,0 +1,58 @@
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  "
+>
+  <h1>jsPDF Dynamic Renderer (Angular)</h1>
+
+  <div style="display: flex; gap: 20px">
+    <div style="flex: 1">
+      <h2>HTML Content:</h2>
+      <textarea
+        [(ngModel)]="htmlInput"
+        rows="20"
+        cols="60"
+        style="
+          width: 100%;
+          min-height: 300px;
+          padding: 10px;
+          border: 1px solid #ccc;
+        "
+      ></textarea>
+    </div>
+    <div style="flex: 1">
+      <h2>PDF Configuration (JSON):</h2>
+      <textarea
+        [ngModel]="configInput()"
+        (ngModelChange)="handleConfigChange($event)"
+        rows="20"
+        cols="40"
+        style="
+          width: 100%;
+          min-height: 300px;
+          padding: 10px;
+          border: 1px solid #ccc;
+        "
+      ></textarea>
+    </div>
+  </div>
+
+  <button
+    (click)="handleGeneratePdf()"
+    style="
+      padding: 12px 25px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    "
+  >
+    Generate PDF with Config
+  </button>
+</div>
