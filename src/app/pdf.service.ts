@@ -7,11 +7,11 @@ import { jsPDF } from 'jspdf';
 export class PdfService {
   constructor() {}
 
-  // Helper function to load an image from a URL (like our local asset path)
-  // and return a promise that resolves with the HTMLImageElement.
   private loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      // Allow cross-origin images for reliability, especially with services like Imgur
+      img.crossOrigin = 'Anonymous';
       img.src = src;
       img.onload = () => resolve(img);
       img.onerror = (err) => reject(err);
@@ -19,7 +19,6 @@ export class PdfService {
   }
 
   public async generatePdf(htmlContent: string, options: any): Promise<Blob> {
-    // Load the background image *before* doing anything else.
     let backgroundImage: HTMLImageElement | null = null;
     if (options.backgroundImageSrc) {
       try {
@@ -30,8 +29,6 @@ export class PdfService {
           options.backgroundImageSrc,
           error
         );
-        // We can decide to continue without a background or throw an error
-        // For now, we'll continue without it.
       }
     }
 
@@ -60,7 +57,6 @@ export class PdfService {
         }
       };
 
-      // Override the addPage method to apply the background on every new page.
       const originalAddPage = (doc as any).addPage;
       (doc as any).addPage = (...args: any[]) => {
         originalAddPage.apply(doc, args);
@@ -68,27 +64,29 @@ export class PdfService {
         return doc;
       };
 
-      // Apply background to the first page.
       addBackgroundImageToPage();
 
-      // Prepare and render the HTML content.
       const tempDiv = document.createElement('div');
       tempDiv.style.width = '210mm';
       tempDiv.innerHTML = htmlContent;
       document.body.appendChild(tempDiv);
 
       doc.html(tempDiv, {
-        x: options.marginLeft,
-        y: options.marginTop,
+        // THIS IS THE CRITICAL CHANGE:
+        // We use the 'margin' option to enforce it on ALL pages.
+        // We no longer use 'x' and 'y' which only apply to the first page.
+        margin: [
+          options.marginTop,
+          options.marginRight,
+          options.marginBottom,
+          options.marginLeft,
+        ],
+        autoPaging: 'text',
         width: pdfPageWidth - options.marginLeft - options.marginRight,
         windowWidth: 1000,
-        autoPaging: 'text',
         callback: (finalDoc) => {
           document.body.removeChild(tempDiv);
-
-          // Restore the original addPage function to prevent side effects.
           (finalDoc as any).addPage = originalAddPage;
-
           resolve(finalDoc.output('blob'));
         },
       });
