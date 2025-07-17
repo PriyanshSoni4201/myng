@@ -2,9 +2,6 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PdfService } from '../pdf.service';
 
-// REMOVE THESE IMPORTS. They are no longer needed or correct for this setup.
-// import bmcImage from '../../assets/bmc.png';
-// import bgImage from '../../assets/bg.png';
 
 @Component({
   selector: 'app-home',
