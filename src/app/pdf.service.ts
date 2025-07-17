@@ -10,12 +10,46 @@ export class PdfService {
   private loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      // Allow cross-origin images for reliability, especially with services like Imgur
       img.crossOrigin = 'Anonymous';
       img.src = src;
       img.onload = () => resolve(img);
       img.onerror = (err) => reject(err);
     });
+  }
+
+  // New pre-processing function to handle atomic blocks
+  private preventBreaks(
+    container: HTMLDivElement,
+    pageContentHeightPx: number
+  ): void {
+    const elements = container.querySelectorAll<HTMLElement>(
+      '.jspdf-prevent-break'
+    );
+    // We iterate backwards because modifying the DOM by adding spacers
+    // would change the `offsetTop` of subsequent elements.
+    for (let i = elements.length - 1; i >= 0; i--) {
+      const el = elements[i];
+      const offsetTop = el.offsetTop;
+      const offsetHeight = el.offsetHeight;
+
+      // Calculate which page the element starts and ends on
+      const startPage = Math.floor(offsetTop / pageContentHeightPx);
+      const endPage = Math.floor(
+        (offsetTop + offsetHeight) / pageContentHeightPx
+      );
+
+      // If the element crosses a page boundary
+      if (startPage !== endPage) {
+        // Calculate the height of the empty space needed to push the element to the next page
+        const currentPageTop = startPage * pageContentHeightPx;
+        const spaceNeeded = pageContentHeightPx - (offsetTop - currentPageTop);
+
+        // Create and insert the spacer element
+        const spacer = document.createElement('div');
+        spacer.style.height = `${spaceNeeded}px`;
+        el.parentNode?.insertBefore(spacer, el);
+      }
+    }
   }
 
   public async generatePdf(htmlContent: string, options: any): Promise<Blob> {
@@ -68,13 +102,18 @@ export class PdfService {
 
       const tempDiv = document.createElement('div');
       tempDiv.style.width = '210mm';
+      tempDiv.style.wordWrap = 'break-word';
       tempDiv.innerHTML = htmlContent;
       document.body.appendChild(tempDiv);
 
+      // PRE-PROCESSING STEP
+      const mmToPxFactor = 3.7795275591; // A common conversion factor
+      const pageContentHeightPx =
+        (pdfPageHeight - options.marginTop - options.marginBottom) *
+        mmToPxFactor;
+      this.preventBreaks(tempDiv, pageContentHeightPx);
+
       doc.html(tempDiv, {
-        // THIS IS THE CRITICAL CHANGE:
-        // We use the 'margin' option to enforce it on ALL pages.
-        // We no longer use 'x' and 'y' which only apply to the first page.
         margin: [
           options.marginTop,
           options.marginRight,
