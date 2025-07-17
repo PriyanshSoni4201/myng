@@ -7,72 +7,89 @@ import { jsPDF } from 'jspdf';
 export class PdfService {
   constructor() {}
 
-  generatePdf(htmlContent: string, options: any = {}): Promise<Blob> {
-    return new Promise(async (resolve) => {
-      const {
-        orientation = 'p',
-        unit = 'mm',
-        format = 'a4',
-        marginTop = 10,
-        marginBottom = 10,
-        marginLeft = 10,
-        marginRight = 10,
-        backgroundImageSrc = null,
-      } = options;
+  // Helper function to load an image from a URL (like our local asset path)
+  // and return a promise that resolves with the HTMLImageElement.
+  private loadImage(src: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+    });
+  }
 
+  public async generatePdf(htmlContent: string, options: any): Promise<Blob> {
+    // Load the background image *before* doing anything else.
+    let backgroundImage: HTMLImageElement | null = null;
+    if (options.backgroundImageSrc) {
+      try {
+        backgroundImage = await this.loadImage(options.backgroundImageSrc);
+      } catch (error) {
+        console.error(
+          'Failed to load background image:',
+          options.backgroundImageSrc,
+          error
+        );
+        // We can decide to continue without a background or throw an error
+        // For now, we'll continue without it.
+      }
+    }
+
+    return new Promise((resolve) => {
       const doc = new jsPDF({
-        orientation,
-        unit,
-        format,
+        orientation: options.orientation,
+        unit: options.unit,
+        format: options.format,
       });
 
       const pdfPageWidth = doc.internal.pageSize.getWidth();
       const pdfPageHeight = doc.internal.pageSize.getHeight();
 
-      if (backgroundImageSrc) {
-        try {
+      const addBackgroundImageToPage = () => {
+        if (backgroundImage) {
           doc.addImage(
-            backgroundImageSrc,
+            backgroundImage,
             'PNG',
             0,
             0,
             pdfPageWidth,
-            pdfPageHeight
+            pdfPageHeight,
+            undefined,
+            'FAST'
           );
-        } catch (e) {
-          console.error('Error adding background image:', e);
         }
-      }
+      };
 
-      const pdfContentWidth = pdfPageWidth - (marginLeft + marginRight);
+      // Override the addPage method to apply the background on every new page.
+      const originalAddPage = (doc as any).addPage;
+      (doc as any).addPage = (...args: any[]) => {
+        originalAddPage.apply(doc, args);
+        addBackgroundImageToPage();
+        return doc;
+      };
 
-      const dpi = 96;
-      const mmToPxFactor = dpi / 25.4;
+      // Apply background to the first page.
+      addBackgroundImageToPage();
 
-      const htmlRenderWidthPx = Math.floor(pdfContentWidth * mmToPxFactor);
-      const htmlRenderMinHeightPx = Math.floor(
-        (pdfPageHeight - (marginTop + marginBottom)) * mmToPxFactor
-      );
-
+      // Prepare and render the HTML content.
       const tempDiv = document.createElement('div');
-      tempDiv.style.width = `${htmlRenderWidthPx}px`;
-      tempDiv.style.minHeight = `${htmlRenderMinHeightPx}px`;
-      tempDiv.style.boxSizing = 'border-box';
-      tempDiv.style.padding = '0px';
-      tempDiv.style.margin = '0px';
+      tempDiv.style.width = '210mm';
       tempDiv.innerHTML = htmlContent;
-
       document.body.appendChild(tempDiv);
 
       doc.html(tempDiv, {
-        x: marginLeft,
-        y: marginTop,
-        width: pdfContentWidth,
-        windowWidth: htmlRenderWidthPx,
+        x: options.marginLeft,
+        y: options.marginTop,
+        width: pdfPageWidth - options.marginLeft - options.marginRight,
+        windowWidth: 1000,
         autoPaging: 'text',
-        callback: function (pdf) {
+        callback: (finalDoc) => {
           document.body.removeChild(tempDiv);
-          resolve(pdf.output('blob'));
+
+          // Restore the original addPage function to prevent side effects.
+          (finalDoc as any).addPage = originalAddPage;
+
+          resolve(finalDoc.output('blob'));
         },
       });
     });
