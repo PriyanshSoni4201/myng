@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -34,7 +33,7 @@ export class PdfService {
         try {
           doc.addImage(
             backgroundImageSrc,
-            'PNG', // Assumes backgroundImageSrc points to a PNG. Change to 'JPEG' if it's a JPG.
+            'PNG',
             0,
             0,
             pdfPageWidth,

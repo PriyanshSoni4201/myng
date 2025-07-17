@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PdfService } from '../pdf.service'; // Ensure this path matches actual file casing (pdf.service.ts)
+import { PdfService } from '../pdf.service';
 
-// Remove these direct imports for images:
+// REMOVE THESE IMPORTS. They are no longer needed or correct for this setup.
 // import bmcImage from '../../assets/bmc.png';
 // import bgImage from '../../assets/bg.png';
 
@@ -96,8 +96,8 @@ export class HomeComponent {
         marginBottom: 20,
         marginLeft: 25,
         marginRight: 25,
-        // Reference the image by its public path once compiled
-        backgroundImageSrc: '/assets/bg.png',
+        // Now reference from the new public path
+        backgroundImageSrc: '/public/bg.png',
       },
       null,
       2
