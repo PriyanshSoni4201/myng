@@ -17,33 +17,6 @@ export class PdfService {
     });
   }
 
-  // Prevent page breaks inside elements marked with 'jspdf-prevent-break'
-  private preventBreaks(
-    container: HTMLDivElement,
-    pageContentHeightPx: number
-  ): void {
-    const elements = container.querySelectorAll<HTMLElement>(
-      '.jspdf-prevent-break'
-    );
-    for (let i = elements.length - 1; i >= 0; i--) {
-      const el = elements[i];
-      const offsetTop = el.offsetTop;
-      const offsetHeight = el.offsetHeight;
-      const startPage = Math.floor(offsetTop / pageContentHeightPx);
-      const endPage = Math.floor(
-        (offsetTop + offsetHeight) / pageContentHeightPx
-      );
-
-      if (startPage !== endPage) {
-        const currentPageTop = startPage * pageContentHeightPx;
-        const spaceNeeded = pageContentHeightPx - (offsetTop - currentPageTop);
-        const spacer = document.createElement('div');
-        spacer.style.height = `${spaceNeeded}px`;
-        el.parentNode?.insertBefore(spacer, el);
-      }
-    }
-  }
-
   public async generatePdf(htmlContent: string, options: any): Promise<Blob> {
     let backgroundImage: HTMLImageElement | null = null;
     if (options.backgroundImageSrc) {
@@ -68,6 +41,7 @@ export class PdfService {
       const pdfPageWidth = doc.internal.pageSize.getWidth();
       const pdfPageHeight = doc.internal.pageSize.getHeight();
 
+      // Function to add background image to the current page
       const addBackgroundImageToPage = () => {
         if (backgroundImage) {
           doc.addImage(
@@ -83,47 +57,30 @@ export class PdfService {
         }
       };
 
+      // Override jsPDF's addPage to automatically add background image to new pages
       const originalAddPage = (doc as any).addPage;
       (doc as any).addPage = (...args: any[]) => {
         originalAddPage.apply(doc, args);
-        addBackgroundImageToPage();
+        addBackgroundImageToPage(); // Add background to the newly created page
         return doc;
       };
 
+      // Add background image to the first page initially
       addBackgroundImageToPage();
 
-      const tempDiv = document.createElement('div');
-      tempDiv.style.width = '210mm';
-      tempDiv.style.wordWrap = 'break-word';
-      tempDiv.innerHTML = htmlContent;
-
-      // ✅ Add 'jspdf-prevent-break' to the outermost <div>
-      const outermostDiv = tempDiv.firstElementChild as HTMLElement;
-      if (outermostDiv) {
-        outermostDiv.classList.add('jspdf-prevent-break');
-      }
-
-      document.body.appendChild(tempDiv);
-
-      const mmToPxFactor = 3.7795275591; // A4 mm to px
-      const pageContentHeightPx =
-        (pdfPageHeight - options.marginTop - options.marginBottom) *
-        mmToPxFactor;
-
-      this.preventBreaks(tempDiv, pageContentHeightPx);
-
-      doc.html(tempDiv, {
+      // Render the HTML content directly without creating a temporary div in the DOM
+      doc.html(htmlContent, {
         margin: [
           options.marginTop,
           options.marginRight,
           options.marginBottom,
           options.marginLeft,
         ],
-        autoPaging: 'text',
+        autoPaging: 'text', // Continue to use auto-paging for text
         width: pdfPageWidth - options.marginLeft - options.marginRight,
-        windowWidth: 1000,
+        windowWidth: 1000, // Important for how jsPDF interprets CSS/layout
         callback: (finalDoc) => {
-          document.body.removeChild(tempDiv);
+          // Restore original addPage function to avoid side effects if doc object is reused
           (finalDoc as any).addPage = originalAddPage;
           resolve(finalDoc.output('blob'));
         },
