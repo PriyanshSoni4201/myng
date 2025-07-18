@@ -1,7 +1,7 @@
 // pdf.service.ts
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
-// Ensure the html plugin is correctly loaded/imported if you're using modular jspdf setup
+
 
 @Injectable({
   providedIn: 'root',
@@ -23,15 +23,10 @@ export class PdfService {
    * Generates a PDF from HTML content with specified options and directly triggers the download.
    * This method handles all asynchronous operations and the file download internally.
    *
-   * @param htmlContent The HTML string to be converted to PDF.
-   * @param options An object containing PDF generation options:
-   * - `orientation`: 'p' (portrait) or 'l' (landscape).
-   * - `unit`: Unit for measurements (e.g., 'mm', 'pt', 'in').
-   * - `format`: Page format (e.g., 'a4', 'letter').
-   * - `marginTop`, `marginRight`, `marginBottom`, `marginLeft`: Page margins in specified `unit`.
-   * - `backgroundImageSrc`: (Optional) URL of an image to be used as a background on every page.
-   * - `filename`: The desired filename for the downloaded PDF (e.g., 'my_document.pdf').
-   * @returns void (the download is a side effect)
+   * @param htmlContent
+   * @param options
+
+   * @returns
    */
   public async generatePdf(htmlContent: string, options: any): Promise<void> {
     // <--- Method name reverted here!

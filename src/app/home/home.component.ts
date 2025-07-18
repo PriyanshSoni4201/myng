@@ -34,8 +34,6 @@ export class HomeComponent {
       backgroundImageSrc:'base64 image or image from public',
       filename: 'sample_document.pdf',
     };
-
-    // Reverted to calling 'generatePdf'
     this.pdfService.generatePdf(htmlContent, options);
   }
 }
