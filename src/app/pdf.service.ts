@@ -1,9 +1,7 @@
 // pdf.service.ts
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
-// Note: This service uses jspdf's built-in .html() method,
-// which internally handles rendering HTML to canvas, but you
-// do not directly import or use 'html2canvas' in this service code.
+// Ensure the html plugin is correctly loaded/imported if you're using modular jspdf setup
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +9,10 @@ import { jsPDF } from 'jspdf';
 export class PdfService {
   constructor() {}
 
-  /**
-   * Loads an image and returns a Promise that resolves with the HTMLImageElement.
-   * Useful for loading background images before PDF generation.
-   * @param src The source URL of the image.
-   * @returns A Promise that resolves with the loaded HTMLImageElement.
-   */
   private loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = 'Anonymous'; // Essential for loading images from different origins
+      img.crossOrigin = 'Anonymous';
       img.src = src;
       img.onload = () => resolve(img);
       img.onerror = (err) => reject(err);
@@ -28,8 +20,8 @@ export class PdfService {
   }
 
   /**
-   * Generates a PDF from HTML content with specified options.
-   * It supports adding a background image to each page.
+   * Generates a PDF from HTML content with specified options and directly triggers the download.
+   * This method handles all asynchronous operations and the file download internally.
    *
    * @param htmlContent The HTML string to be converted to PDF.
    * @param options An object containing PDF generation options:
@@ -38,25 +30,25 @@ export class PdfService {
    * - `format`: Page format (e.g., 'a4', 'letter').
    * - `marginTop`, `marginRight`, `marginBottom`, `marginLeft`: Page margins in specified `unit`.
    * - `backgroundImageSrc`: (Optional) URL of an image to be used as a background on every page.
-   * @returns A Promise that resolves with a Blob representing the generated PDF.
+   * - `filename`: The desired filename for the downloaded PDF (e.g., 'my_document.pdf').
+   * @returns void (the download is a side effect)
    */
-  public async generatePdf(htmlContent: string, options: any): Promise<Blob> {
+  public async generatePdf(htmlContent: string, options: any): Promise<void> {
+    // <--- Method name reverted here!
     let backgroundImage: HTMLImageElement | null = null;
     if (options.backgroundImageSrc) {
       try {
         backgroundImage = await this.loadImage(options.backgroundImageSrc);
       } catch (error) {
         console.error(
-          'Failed to load background image:',
+          'Service: Failed to load background image:',
           options.backgroundImageSrc,
           error
         );
-        // Optionally, decide if you want to throw the error or proceed without background
-        // For now, it will proceed without the background image if loading fails.
       }
     }
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       const doc = new jsPDF({
         orientation: options.orientation,
         unit: options.unit,
@@ -66,36 +58,30 @@ export class PdfService {
       const pdfPageWidth = doc.internal.pageSize.getWidth();
       const pdfPageHeight = doc.internal.pageSize.getHeight();
 
-      // Function to add background image to the current page
       const addBackgroundImageToPage = () => {
         if (backgroundImage) {
           doc.addImage(
             backgroundImage,
-            'PNG', // or 'JPEG', based on your image type
+            'PNG',
             0,
             0,
             pdfPageWidth,
             pdfPageHeight,
             undefined,
-            'FAST' // Provides a faster rendering quality for images
+            'FAST'
           );
         }
       };
 
-      // Override jsPDF's addPage to automatically add a background image to new pages
-      // This ensures the background appears on all pages, including those created by auto-paging.
-      const originalAddPage = (doc as any).addPage; // Store original for later restoration
+      const originalAddPage = (doc as any).addPage;
       (doc as any).addPage = (...args: any[]) => {
-        originalAddPage.apply(doc, args); // Call the original addPage method
-        addBackgroundImageToPage(); // Add background to the newly created page
-        return doc; // Return doc for chaining
+        originalAddPage.apply(doc, args);
+        addBackgroundImageToPage();
+        return doc;
       };
 
-      // Add background image to the very first page
       addBackgroundImageToPage();
 
-      // Use jsPDF's .html() method to convert the HTML string to PDF.
-      // This method handles the rendering internally without explicit direct 'html2canvas' calls in your code.
       doc.html(htmlContent, {
         margin: [
           options.marginTop,
@@ -103,14 +89,27 @@ export class PdfService {
           options.marginBottom,
           options.marginLeft,
         ],
-        autoPaging: 'text', // Controls how content flows across pages. 'text' tries to break intelligently.
-        width: pdfPageWidth - options.marginLeft - options.marginRight, // Content width within the PDF page
-        windowWidth: 1000, // Important for how jsPDF interprets CSS and layout during HTML rendering
+        autoPaging: 'text',
+        width: pdfPageWidth - options.marginLeft - options.marginRight,
+        windowWidth: 1000,
         callback: (finalDoc) => {
-          // Restore the original addPage function to the document object
-          // This prevents potential side effects if the 'doc' object were to be reused.
           (finalDoc as any).addPage = originalAddPage;
-          resolve(finalDoc.output('blob')); // Resolve the Promise with the PDF Blob
+
+          try {
+            const pdfBlob: Blob = finalDoc.output('blob');
+            const url = URL.createObjectURL(pdfBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = options.filename || 'document.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            resolve();
+          } catch (downloadError) {
+            console.error('Service: PDF download failed:', downloadError);
+            reject(downloadError);
+          }
         },
       });
     });
