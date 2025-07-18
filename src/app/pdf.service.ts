@@ -17,7 +17,7 @@ export class PdfService {
     });
   }
 
-  // New pre-processing function to handle atomic blocks
+  // Prevent page breaks inside elements marked with 'jspdf-prevent-break'
   private preventBreaks(
     container: HTMLDivElement,
     pageContentHeightPx: number
@@ -25,26 +25,18 @@ export class PdfService {
     const elements = container.querySelectorAll<HTMLElement>(
       '.jspdf-prevent-break'
     );
-    // We iterate backwards because modifying the DOM by adding spacers
-    // would change the `offsetTop` of subsequent elements.
     for (let i = elements.length - 1; i >= 0; i--) {
       const el = elements[i];
       const offsetTop = el.offsetTop;
       const offsetHeight = el.offsetHeight;
-
-      // Calculate which page the element starts and ends on
       const startPage = Math.floor(offsetTop / pageContentHeightPx);
       const endPage = Math.floor(
         (offsetTop + offsetHeight) / pageContentHeightPx
       );
 
-      // If the element crosses a page boundary
       if (startPage !== endPage) {
-        // Calculate the height of the empty space needed to push the element to the next page
         const currentPageTop = startPage * pageContentHeightPx;
         const spaceNeeded = pageContentHeightPx - (offsetTop - currentPageTop);
-
-        // Create and insert the spacer element
         const spacer = document.createElement('div');
         spacer.style.height = `${spaceNeeded}px`;
         el.parentNode?.insertBefore(spacer, el);
@@ -104,13 +96,20 @@ export class PdfService {
       tempDiv.style.width = '210mm';
       tempDiv.style.wordWrap = 'break-word';
       tempDiv.innerHTML = htmlContent;
+
+      // ✅ Add 'jspdf-prevent-break' to the outermost <div>
+      const outermostDiv = tempDiv.firstElementChild as HTMLElement;
+      if (outermostDiv) {
+        outermostDiv.classList.add('jspdf-prevent-break');
+      }
+
       document.body.appendChild(tempDiv);
 
-      // PRE-PROCESSING STEP
-      const mmToPxFactor = 3.7795275591; // A common conversion factor
+      const mmToPxFactor = 3.7795275591; // A4 mm to px
       const pageContentHeightPx =
         (pdfPageHeight - options.marginTop - options.marginBottom) *
         mmToPxFactor;
+
       this.preventBreaks(tempDiv, pageContentHeightPx);
 
       doc.html(tempDiv, {
