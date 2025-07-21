@@ -4,6 +4,7 @@ import {
   OnChanges,
   SimpleChanges,
   SecurityContext,
+  ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
@@ -16,12 +17,13 @@ import { jsPDF } from 'jspdf';
   imports: [CommonModule],
   templateUrl: './pdf-preview.component.html',
   styleUrls: ['./pdf-preview.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PdfGeneratorComponent implements OnChanges {
   @Input() contentHtml: string = '<p>No content provided.</p>';
   @Input() options: any = { format: 'a4' };
 
-  protected previewHtml: SafeHtml | null = null;
+  protected paginatedHtml: SafeHtml[] = [];
   protected previewStyles: { [key: string]: string } = {};
 
   constructor(
@@ -30,48 +32,117 @@ export class PdfGeneratorComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Re-generate the preview whenever the inputs change.
     if (changes['contentHtml'] || changes['options']) {
-      this.generatePreview();
+      this.generatePaginatedPreview();
     }
-  }
-
-  private generatePreview(): void {
-    if (!this.options) {
-      this.previewHtml = this.sanitizer.bypassSecurityTrustHtml(
-        this.contentHtml
-      );
-      return;
-    }
-
-    // Create a temporary jsPDF instance to get page dimensions dynamically.
-    const tempDoc = new jsPDF(this.options);
-    const pageWidth = tempDoc.internal.pageSize.getWidth();
-    const pageHeight = tempDoc.internal.pageSize.getHeight();
-
-    // Create dynamic styles for the preview container to match the PDF options.
-    this.previewStyles = {
-      // Use the exact dimensions from jsPDF to set the aspect ratio.
-      '--page-aspect-ratio': `${pageWidth} / ${pageHeight}`,
-      '--page-bg-image': `url('${this.options.backgroundImageSrc || ''}')`,
-      // We use px for CSS styling, the service will use the correct units ('mm').
-      '--page-margin-top': `${this.options.marginTop || 0}px`,
-      '--page-margin-right': `${this.options.marginRight || 0}px`,
-      '--page-margin-bottom': `${this.options.marginBottom || 0}px`,
-      '--page-margin-left': `${this.options.marginLeft || 0}px`,
-    };
-
-    // The preview HTML is just the user's content. All styling is applied via CSS.
-    // We sanitize the raw HTML to prevent security issues.
-    this.previewHtml = this.sanitizer.sanitize(
-      SecurityContext.HTML,
-      this.contentHtml
-    );
   }
 
   public downloadPdf(): void {
-    // Pass the original, clean HTML and options to the service.
-    // The service is responsible for handling pagination and backgrounds in the final PDF.
     this.pdfService.generatePdf(this.contentHtml, this.options);
+  }
+
+  private generatePaginatedPreview(): void {
+    const tempDoc = new jsPDF(this.options);
+    const pageW_mm = tempDoc.internal.pageSize.getWidth();
+    const pageH_mm = tempDoc.internal.pageSize.getHeight();
+    const displayWidthPx = 700; // The fixed width of our preview container in the browser
+
+    // The scale factor from the options, essential for matching jsPDF's rendering
+    const scale = this.options.html2canvas?.scale || 0.26;
+
+    // Calculate the pixel dimensions of the HTML content as jsPDF will render it
+    const contentWidth_mm =
+      pageW_mm -
+      (this.options.marginLeft || 0) -
+      (this.options.marginRight || 0);
+    const contentHeight_mm =
+      pageH_mm -
+      (this.options.marginTop || 0) -
+      (this.options.marginBottom || 0);
+
+    const sourceWidthPx = contentWidth_mm / scale;
+    const sourceHeightPx = contentHeight_mm / scale;
+
+    this.previewStyles = {
+      '--page-aspect-ratio': `${pageW_mm} / ${pageH_mm}`,
+      '--page-bg-image': `url('${this.options.backgroundImageSrc || ''}')`,
+      // Calculate padding for the visual preview based on its display width
+      '--page-padding-top': `${
+        ((this.options.marginTop || 0) / pageW_mm) * displayWidthPx
+      }px`,
+      '--page-padding-right': `${
+        ((this.options.marginRight || 0) / pageW_mm) * displayWidthPx
+      }px`,
+      '--page-padding-bottom': `${
+        ((this.options.marginBottom || 0) / pageW_mm) * displayWidthPx
+      }px`,
+      '--page-padding-left': `${
+        ((this.options.marginLeft || 0) / pageW_mm) * displayWidthPx
+      }px`,
+    };
+
+    this.paginatedHtml = this.paginateHtml(
+      this.contentHtml,
+      sourceHeightPx,
+      sourceWidthPx
+    );
+  }
+
+  private paginateHtml(
+    html: string,
+    pageHeightPx: number,
+    pageWidthPx: number
+  ): SafeHtml[] {
+    const pages: string[] = [];
+    const source = document.createElement('div');
+    source.innerHTML = html;
+
+    const measurementDiv = document.createElement('div');
+    measurementDiv.style.width = `${pageWidthPx}px`;
+    measurementDiv.style.visibility = 'hidden';
+    measurementDiv.style.position = 'absolute';
+    measurementDiv.style.top = '-9999px';
+    document.body.appendChild(measurementDiv);
+
+    let currentPageNodes: Node[] = [];
+    let currentHeight = 0;
+
+    Array.from(source.childNodes).forEach((node) => {
+      measurementDiv.appendChild(node.cloneNode(true));
+      const nodeHeight = measurementDiv.offsetHeight;
+      measurementDiv.innerHTML = ''; // Clear after measuring
+
+      if (
+        currentHeight + nodeHeight > pageHeightPx &&
+        currentPageNodes.length > 0
+      ) {
+        // Node overflows, so finalize the current page
+        const pageContainer = document.createElement('div');
+        currentPageNodes.forEach((n) => pageContainer.appendChild(n));
+        pages.push(pageContainer.innerHTML);
+
+        // Start a new page with the current node
+        currentPageNodes = [node.cloneNode(true)];
+        measurementDiv.appendChild(node.cloneNode(true));
+        currentHeight = measurementDiv.offsetHeight;
+        measurementDiv.innerHTML = '';
+      } else {
+        // Node fits, add it to the current page
+        currentPageNodes.push(node.cloneNode(true));
+        currentHeight += nodeHeight;
+      }
+    });
+
+    // Add the last page if it has content
+    if (currentPageNodes.length > 0) {
+      const pageContainer = document.createElement('div');
+      currentPageNodes.forEach((n) => pageContainer.appendChild(n));
+      pages.push(pageContainer.innerHTML);
+    }
+
+    document.body.removeChild(measurementDiv);
+    return pages.map((pageHtml) =>
+      this.sanitizer.bypassSecurityTrustHtml(pageHtml)
+    );
   }
 }

@@ -1,26 +1,25 @@
 <div class="generator-container">
   <div class="toolbar">
-    <h2>PDF Preview</h2>
+    <h2>PDF WYSIWYG Preview</h2>
     <button (click)="downloadPdf()">Download PDF</button>
   </div>
 
   <div class="preview-area">
-    <!--
-      The sizer creates the page shape and holds the background.
-      Its styles are dynamically bound to the options object.
-    -->
+    <!-- Loop through the paginated content and render each page -->
     <div
-      class="preview-document-sizer"
-      [ngStyle]="previewStyles"
+      *ngFor="let pageHtml of paginatedHtml; let i = index"
+      class="preview-page-container"
     >
-      <!--
-        The inner container applies margins (as padding) and holds the
-        sanitized user HTML.
-      -->
+      <p class="page-number">Page {{ i + 1 }}</p>
       <div
-        class="preview-document-content"
-        [innerHTML]="previewHtml"
-      ></div>
+        class="preview-document-sizer"
+        [ngStyle]="previewStyles"
+      >
+        <div
+          class="preview-document-content"
+          [innerHTML]="pageHtml"
+        ></div>
+      </div>
     </div>
   </div>
 </div>
