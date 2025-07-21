@@ -1,9 +1,8 @@
-<div class="toolbar">
-  <h2>Sample PDF Preview</h2>
-  <button (click)="downloadPdf()">Download Sample PDF</button>
-</div>
-
-<div class="preview-container">
-  <!-- The innerHTML is bound to the sanitized, background-wrapped HTML -->
-  <div class="preview-document" [innerHTML]="previewHtml"></div>
-</div>
+<!--
+  Simply use the app-pdf-generator component and pass it the data.
+  All the complex UI and logic is handled inside the component itself.
+-->
+<app-pdf-generator
+  [contentHtml]="pdfContent"
+  [options]="pdfOptions"
+></app-pdf-generator>

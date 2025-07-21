@@ -1,0 +1,26 @@
+<div class="generator-container">
+  <div class="toolbar">
+    <h2>PDF Preview</h2>
+    <button (click)="downloadPdf()">Download PDF</button>
+  </div>
+
+  <div class="preview-area">
+    <!--
+      The sizer creates the page shape and holds the background.
+      Its styles are dynamically bound to the options object.
+    -->
+    <div
+      class="preview-document-sizer"
+      [ngStyle]="previewStyles"
+    >
+      <!--
+        The inner container applies margins (as padding) and holds the
+        sanitized user HTML.
+      -->
+      <div
+        class="preview-document-content"
+        [innerHTML]="previewHtml"
+      ></div>
+    </div>
+  </div>
+</div>

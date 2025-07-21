@@ -1,0 +1,71 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.generator-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #f0f2f5;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  flex-shrink: 0;
+}
+
+.toolbar h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.preview-area {
+  flex-grow: 1;
+  padding: 40px 20px;
+  overflow: auto; /* Allow scrolling for the entire area */
+  display: flex;
+  justify-content: center;
+}
+
+/*
+  This sizer div creates the page shape and holds the background.
+  It uses CSS variables that are set dynamically from the component.
+*/
+.preview-document-sizer {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: var(--page-aspect-ratio, 1 / 1.4142);
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  box-sizing: border-box;
+  overflow: hidden; /* Hide anything that spills out */
+
+  /* The background image is applied here */
+  background-image: var(--page-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/*
+  This inner div handles the "margins" by applying padding.
+  It's also responsible for scrolling overflowing content.
+*/
+.preview-document-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-top: var(--page-margin-top, 20px);
+  padding-right: var(--page-margin-right, 20px);
+  padding-bottom: var(--page-margin-bottom, 20px);
+  padding-left: var(--page-margin-left, 20px);
+}
