@@ -1,9 +1,9 @@
-<!-- src/app/home/home.component.html -->
-<div style="padding: 20px; text-align: center">
-  <h2>Sample PDF Download</h2>
+<div class="toolbar">
+  <h2>Sample PDF Preview</h2>
   <button (click)="downloadPdf()">Download Sample PDF</button>
-  <p>
-    Click the button to generate and download a sample PDF. The process will run
-    in the background.
-  </p>
+</div>
+
+<div class="preview-container">
+  <!-- The innerHTML is bound to the sanitized, background-wrapped HTML -->
+  <div class="preview-document" [innerHTML]="previewHtml"></div>
 </div>
