@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { PdfGeneratorComponent } from '../pdf-generator/pdf-generator.component';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PdfGeneratorComponent],
+  imports: [PdfGeneratorComponent, EditorComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })

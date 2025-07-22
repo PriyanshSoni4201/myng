@@ -1,0 +1,16 @@
+<div class="editor-overlay">
+  <div class="editor-modal">
+    <div class="editor-header">
+      <h3>Edit Content</h3>
+    </div>
+    <div class="editor-body">
+      <p-editor [(ngModel)]="content" [style]="{ height: '320px' }"></p-editor>
+    </div>
+    <div class="editor-footer">
+      <button (click)="onCancel()" class="p-button p-button-secondary">
+        Cancel
+      </button>
+      <button (click)="onSave()" class="p-button save">Save</button>
+    </div>
+  </div>
+</div>

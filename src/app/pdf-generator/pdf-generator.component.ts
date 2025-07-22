@@ -8,11 +8,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { jsPDF } from 'jspdf';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-pdf-generator',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EditorComponent],
   templateUrl: './pdf-generator.component.html',
   styleUrls: ['./pdf-generator.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -28,10 +29,76 @@ export class PdfGeneratorComponent implements OnChanges {
   private constructedPages: string[] = [];
   protected safePages: SafeHtml[] = [];
 
+  // State for the editor
+  protected isEditing = false;
+  protected editingContent = '';
+  private activeEditTarget: {
+    type: 'edit' | 'insert';
+    element: Element;
+  } | null = null;
+
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['mainContentHtml'] &&
+      !changes['mainContentHtml'].isFirstChange()
+    ) {
+      // Avoid re-paginating if the change came from the editor itself
+      return;
+    }
     this.constructPages();
+  }
+
+  protected handleDblClick(event: MouseEvent, pageIndex: number): void {
+    const target = event.target as HTMLElement;
+
+    // Find the direct child of the content area that was clicked
+    const elementToEdit = target.closest('.pdf-content-area > *');
+
+    if (elementToEdit) {
+      // Edit existing element
+      this.activeEditTarget = { type: 'edit', element: elementToEdit };
+      this.editingContent = elementToEdit.innerHTML;
+      this.isEditing = true;
+    } else if (target.closest('.pdf-content-area')) {
+      // Insert new element
+      this.activeEditTarget = { type: 'insert', element: target };
+      this.editingContent = ''; // Start with an empty editor
+      this.isEditing = true;
+    }
+  }
+
+  protected handleSave(newContent: string): void {
+    if (!this.activeEditTarget) return;
+
+    const previewPages = document.querySelectorAll(
+      '.preview-page-wrapper .pdf-content-area'
+    );
+    let fullHtml = '';
+
+    if (this.activeEditTarget.type === 'edit') {
+      this.activeEditTarget.element.innerHTML = newContent;
+    } else if (this.activeEditTarget.type === 'insert') {
+      const newElement = document.createElement('p');
+      newElement.innerHTML = newContent;
+      this.activeEditTarget.element.appendChild(newElement);
+    }
+
+    // Reconstruct the mainContentHtml from the live DOM
+    previewPages.forEach((page) => {
+      fullHtml += (page as HTMLElement).innerHTML;
+    });
+
+    this.mainContentHtml = fullHtml;
+    this.constructPages(); // Re-paginate and render
+    this.handleCancel(); // Close the editor
+  }
+
+  protected handleCancel(): void {
+    this.isEditing = false;
+    this.activeEditTarget = null;
+    this.editingContent = '';
   }
 
   private constructPages(): void {
@@ -112,7 +179,6 @@ export class PdfGeneratorComponent implements OnChanges {
     heightMm: number
   ): string {
     const contentWidthMm = widthMm - this.sideMarginMm * 2;
-
     return `
       <div class="pdf-page-container" style="width: ${widthMm}mm; height: ${heightMm}mm;">
         <img class="pdf-background-image" src="${this.backgroundImageSrc}" />
@@ -129,16 +195,11 @@ export class PdfGeneratorComponent implements OnChanges {
   public async downloadPdf(): Promise<void> {
     const doc = new jsPDF(this.options);
     const pageW_mm = doc.internal.pageSize.getWidth();
-
     const windowWidthInPixels = pageW_mm * (96 / 25.4);
 
     for (let i = 0; i < this.constructedPages.length; i++) {
-      if (i > 0) {
-        doc.addPage();
-      }
-
+      if (i > 0) doc.addPage();
       const pageHtml = this.constructedPages[i];
-
       await doc.html(pageHtml, {
         autoPaging: false,
         x: 0,
@@ -148,10 +209,7 @@ export class PdfGeneratorComponent implements OnChanges {
       });
     }
 
-    // ** THE REQUESTED CHANGE IS HERE **
-    // This line will remove the first page from the document right before it is saved.
     doc.deletePage(1);
-
     doc.save(this.options.filename || 'document.pdf');
   }
 }

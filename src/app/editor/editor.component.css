@@ -1,0 +1,153 @@
+/* Dark theme for the entire editor modal */
+.editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.editor-modal {
+  background-color: #1e1e1e; /* Dark background */
+  color: #f0f0f0; /* Light text color for modal content */
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #444; /* Subtle border for the modal */
+}
+
+.editor-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #444; /* Darker border */
+}
+
+.editor-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #ffffff;
+}
+
+.editor-body {
+  padding: 1rem 1.5rem;
+  flex-grow: 1;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #444;
+  background-color: #2a2a2a; /* Footer background */
+}
+
+/*
+ * PrimeNG/Quill Editor Dark Theme Override
+ * The ::ng-deep is used here to pierce style encapsulation and theme the child component.
+*/
+
+/* Toolbar background and border */
+:host ::ng-deep .p-editor .p-editor-toolbar {
+  background-color: #2a2a2a !important;
+  border-bottom: 1px solid #444 !important;
+}
+
+/* Toolbar icons and dropdown text color */
+:host ::ng-deep .p-editor .p-editor-toolbar .ql-snow .ql-stroke {
+  stroke: #c7c7c7;
+}
+:host ::ng-deep .p-editor .p-editor-toolbar .ql-snow .ql-fill {
+  fill: #c7c7c7;
+}
+:host ::ng-deep .p-editor .p-editor-toolbar .ql-snow .ql-picker-label {
+  color: #c7c7c7;
+}
+
+/* Change icon color on hover */
+:host
+  ::ng-deep
+  .p-editor
+  .p-editor-toolbar
+  .ql-snow
+  .ql-formats
+  button:hover
+  .ql-stroke,
+:host
+  ::ng-deep
+  .p-editor
+  .p-editor-toolbar
+  .ql-snow
+  .ql-formats
+  button.ql-active
+  .ql-stroke {
+  stroke: #ffffff;
+}
+:host
+  ::ng-deep
+  .p-editor
+  .p-editor-toolbar
+  .ql-snow
+  .ql-formats
+  button:hover
+  .ql-fill,
+:host
+  ::ng-deep
+  .p-editor
+  .p-editor-toolbar
+  .ql-snow
+  .ql-formats
+  button.ql-active
+  .ql-fill {
+  fill: #ffffff;
+}
+
+/* Editor content area background and border */
+:host ::ng-deep .p-editor .p-editor-content {
+  background-color: #1e1e1e !important;
+  border-color: #444 !important;
+}
+
+/* Text color inside the editor content area */
+:host ::ng-deep .p-editor .ql-editor {
+  color: #f0f0f0;
+}
+
+/* Dark theme for buttons */
+.p-button {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.p-button-secondary {
+  background-color: #4a4a4a;
+  color: #ffffff;
+  border-color: #666;
+}
+
+.p-button-secondary:hover {
+  background-color: #5a5a5a;
+  border-color: #777;
+}
+
+.p-button.save {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+.p-button.save:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
