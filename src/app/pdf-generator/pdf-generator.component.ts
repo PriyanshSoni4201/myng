@@ -143,7 +143,7 @@ export class PdfGeneratorComponent implements OnChanges {
       // This lets jsPDF handle the layering of text on top of the image.
       await doc.html(pageHtml, {
         autoPaging: false,
-        width: pageW,
+        width: pageW + 50,
         windowWidth: 1000,
         x: 0,
         y: 0,
