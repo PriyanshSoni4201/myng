@@ -17,7 +17,7 @@ export class HomeComponent {
   };
 
   topMarginMm = 30;
-  bottomMarginMm = 30;
+  bottomMarginMm = 15;
   sideMarginMm = 20;
 
   backgroundImageSrc = 'public/bg.png';
