@@ -25,91 +25,33 @@ export class PdfGeneratorComponent implements OnChanges {
   @Input() bottomMarginMm: number = 0;
   @Input() sideMarginMm: number = 0;
 
-  private constructedPages: string[] = [];
-  // This property now correctly holds the sanitized HTML for the template.
-  protected safePages: SafeHtml[] = [];
+  // This is now only for the visual preview
+  protected previewHtml: SafeHtml = '';
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // We only need to reconstruct the pages if the input data changes.
-    this.constructPages();
+    // We only need to construct the preview when data changes.
+    this.constructPreview();
   }
 
-  private constructPages(): void {
+  private constructPreview(): void {
     const tempDoc = new jsPDF(this.options);
     const pageW_mm = tempDoc.internal.pageSize.getWidth();
     const pageH_mm = tempDoc.internal.pageSize.getHeight();
 
-    const previewWidthPx = 700;
-    const pxPerMm = previewWidthPx / pageW_mm;
-    const contentW_px = (pageW_mm - this.sideMarginMm * 2) * pxPerMm;
-    const contentH_px =
-      (pageH_mm - this.topMarginMm - this.bottomMarginMm) * pxPerMm;
-
-    const contentChunks = this._paginateContent(
+    // The preview construction remains the same, as it provides a good visual guide.
+    const previewHtmlString = this._buildPreviewHtml(
       this.mainContentHtml,
-      contentW_px,
-      contentH_px
+      pageW_mm,
+      pageH_mm
     );
-
-    this.constructedPages = contentChunks.map((chunk) =>
-      this._buildPageHtml(chunk, pageW_mm, pageH_mm)
-    );
-    this.safePages = this.constructedPages.map((p) =>
-      this.sanitizer.bypassSecurityTrustHtml(p)
-    );
+    this.previewHtml =
+      this.sanitizer.bypassSecurityTrustHtml(previewHtmlString);
   }
 
-  private _paginateContent(
-    html: string,
-    widthPx: number,
-    heightPx: number
-  ): string[] {
-    const chunks: string[] = [];
-    const source = document.createElement('div');
-    source.innerHTML = html;
-
-    const measurementDiv = document.createElement('div');
-    measurementDiv.style.width = `${widthPx}px`;
-    measurementDiv.style.visibility = 'hidden';
-    measurementDiv.style.position = 'absolute';
-    measurementDiv.style.top = '-9999px';
-    document.body.appendChild(measurementDiv);
-
-    let currentPageNodes: Node[] = [];
-    Array.from(source.childNodes).forEach((node) => {
-      measurementDiv.innerHTML = '';
-      currentPageNodes.forEach((n) =>
-        measurementDiv.appendChild(n.cloneNode(true))
-      );
-      measurementDiv.appendChild(node.cloneNode(true));
-
-      if (
-        measurementDiv.offsetHeight > heightPx &&
-        currentPageNodes.length > 0
-      ) {
-        const chunkContainer = document.createElement('div');
-        currentPageNodes.forEach((n) => chunkContainer.appendChild(n));
-        chunks.push(chunkContainer.innerHTML);
-        currentPageNodes = [node.cloneNode(true)];
-      } else {
-        currentPageNodes.push(node.cloneNode(true));
-      }
-    });
-
-    if (currentPageNodes.length > 0) {
-      const chunkContainer = document.createElement('div');
-      currentPageNodes.forEach((n) => chunkContainer.appendChild(n));
-      chunks.push(chunkContainer.innerHTML);
-    }
-
-    document.body.removeChild(measurementDiv);
-    return chunks;
-  }
-
-  private _buildPageHtml(
-    contentChunk: string,
+  private _buildPreviewHtml(
+    content: string,
     widthMm: number,
     heightMm: number
   ): string {
@@ -121,7 +63,7 @@ export class PdfGeneratorComponent implements OnChanges {
         <div class="pdf-content-wrapper">
             <div class="pdf-spacer-top" style="height: ${this.topMarginMm}mm;"></div>
             <div class="pdf-content-area" style="width: ${contentWidthMm}mm; margin: 0 ${this.sideMarginMm}mm;">
-              ${contentChunk}
+              ${content}
             </div>
         </div>
       </div>
@@ -132,23 +74,27 @@ export class PdfGeneratorComponent implements OnChanges {
     const doc = new jsPDF(this.options);
     const pageW = doc.internal.pageSize.getWidth();
     const pageH = doc.internal.pageSize.getHeight();
+    const contentW = pageW - this.sideMarginMm * 2;
 
-    for (let i = 0; i < this.constructedPages.length; i++) {
-      if (i > 0) {
-        doc.addPage();
-      }
-      const pageHtml = this.constructedPages[i];
-
-      // We pass the *entire constructed page* to the html method.
-      // This lets jsPDF handle the layering of text on top of the image.
-      await doc.html(pageHtml, {
-        autoPaging: false,
-        width: pageW + 50,
-        windowWidth: 1000,
-        x: 0,
-        y: 0,
-      });
+    // 1. Add the background image FIRST. This makes it the bottom layer.
+    if (this.backgroundImageSrc) {
+      doc.addImage(this.backgroundImageSrc, 'PNG', 0, 0, pageW, pageH);
     }
+
+    // 2. Render the HTML content on TOP of the image.
+    await doc.html(this.mainContentHtml, {
+      // We are no longer using autoPaging for this single-page example.
+      // We will re-introduce it correctly later.
+      autoPaging: 'text',
+
+      // Use the options to position the content correctly.
+      x: this.sideMarginMm,
+      y: this.topMarginMm,
+
+      // Tell the renderer the exact width the content should occupy.
+      width: contentW,
+      windowWidth: 800, // A reasonable virtual browser width for consistent text wrapping.
+    });
 
     doc.save(this.options.filename || 'document.pdf');
   }
