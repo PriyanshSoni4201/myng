@@ -4,9 +4,13 @@
     <button (click)="downloadPdf()">Download PDF</button>
   </div>
   <div class="preview-area">
-    <!-- This now correctly binds to 'safePagesForPreview' -->
+    <!-- 
+      ** THE FIX IS HERE **
+      Changed the incorrect 'safePagesForPreview' to the correct 'safePages'
+      to match the property name in the component's TypeScript class.
+    -->
     <div
-      *ngFor="let pageHtml of safePagesForPreview; let i = index"
+      *ngFor="let pageHtml of safePages; let i = index"
       class="preview-page-wrapper"
     >
       <p class="page-number">Page {{ i + 1 }}</p>
