@@ -1,8 +1,7 @@
-/* Styles for the component's UI */
-.generator-container,
-.preview-area {
+.generator-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
   background-color: #f0f2f5;
 }
 .toolbar {
@@ -22,11 +21,13 @@
   flex-grow: 1;
   padding: 24px;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 .preview-page-wrapper {
   margin-bottom: 24px;
-  max-width: 700px; /* Constrain preview width for readability */
+  max-width: 700px;
   width: 100%;
 }
 .page-number {
@@ -36,13 +37,12 @@
   margin-bottom: 8px;
 }
 
-/* Styles for the dynamically injected HTML for both preview and PDF */
 .pdf-page-container {
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border: 1px solid #ced4da;
-  background-color: white; /* Fallback for when image is loading */
+  background-color: white;
 }
 .pdf-background-image {
   position: absolute;
@@ -54,7 +54,7 @@
 }
 .pdf-content-wrapper {
   position: relative;
-  z-index: 2; /* Sits on top of the background */
+  z-index: 2;
   width: 100%;
   height: 100%;
 }

@@ -4,9 +4,13 @@
     <button (click)="downloadPdf()">Download PDF</button>
   </div>
   <div class="preview-area">
-    <div class="preview-page-wrapper">
-      <!-- The preview remains a single, accurately constructed page for visual reference -->
-      <div [innerHTML]="previewHtml"></div>
+    <!-- This now correctly binds to 'safePagesForPreview' -->
+    <div
+      *ngFor="let pageHtml of safePagesForPreview; let i = index"
+      class="preview-page-wrapper"
+    >
+      <p class="page-number">Page {{ i + 1 }}</p>
+      <div [innerHTML]="pageHtml"></div>
     </div>
   </div>
 </div>
