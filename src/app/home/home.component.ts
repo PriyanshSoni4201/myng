@@ -28,9 +28,9 @@ export class HomeComponent {
   // Provide the raw HTML content that needs to be paginated.
   // The content is structured as a series of independent elements (h2, table, h3)
   // to allow the pagination logic to split them correctly.
-  mainContentHtml: string = `<div style="font-family: sans-serif; font-size: 10px; margin: 10px; width: 700px; color: #000000;">
+  mainContentHtml: string = `<div style="font-family: sans-serif; font-size: 10px; color: #000000; width: 700px; margin: 10px;">
 
-<div style="border-bottom: 1px solid #000000; padding-bottom: 5px; margin-bottom: 10px;">
+<div style="border-bottom: 1px solid #000000; padding-bottom: 5px; margin-bottom: 12px;">  <!-- Adjusted margin-bottom -->
     <div style="font-weight: bold; font-size: 12px;">CARDIOLOGY SUBSEQUENT CONSULTATION</div>
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
@@ -54,6 +54,8 @@ export class HomeComponent {
     <div style="font-weight: bold;">Brief Patient History</div>
     <div>Suffered with diabetes</div>
 </div>
+
+<div style="height: 6px; background-color: #f0f0f0;"></div> <!-- Adjusted height -->
 
 <div style="margin-bottom: 10px;">
     <div style="font-weight: bold;">Chief Complaints</div>
@@ -89,6 +91,8 @@ export class HomeComponent {
     </table>
 </div>
 
+<div style="height: 6px; background-color: #f0f0f0;"></div> <!-- Adjusted height -->
+
 <div style="margin-bottom: 10px;">
     <div style="font-weight: bold;">ODP/HPI</div>
     <table style="width: 100%; border-collapse: collapse;">
@@ -118,6 +122,8 @@ export class HomeComponent {
         </tbody>
     </table>
 </div>
+
+<div style="height: 6px; background-color: #f0f0f0;"></div> <!-- Adjusted height -->
 
 <div style="margin-bottom: 10px;">
     <div style="font-weight: bold;">Past Medical History</div>
@@ -159,6 +165,8 @@ export class HomeComponent {
     </table>
 </div>
 
+<div style="height: 6px; background-color: #f0f0f0;"></div> <!-- Adjusted height -->
+
 <div style="margin-bottom: 10px;">
     <div style="font-weight: bold;">Hospitalization & Surgical History</div>
     <table style="width: 100%; border-collapse: collapse;">
@@ -199,11 +207,14 @@ export class HomeComponent {
     </table>
 </div>
 
+<div style="height: 6px; background-color: #f0f0f0;"></div> <!-- Adjusted height -->
+
 <div style="border-top: 1px solid #000000; padding-top: 5px; display: flex; justify-content: space-between; align-items: center;">
     <div>18 Mar 2025 | 15:04</div>
     <div>Dr. Shantanu Wankhede</div>
     <div>Page 1 of 6</div>
 </div>
+
 
 </div>`;
 }
