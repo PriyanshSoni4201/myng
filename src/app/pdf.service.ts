@@ -1,7 +1,5 @@
-// pdf.service.ts
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
-
 
 @Injectable({
   providedIn: 'root',
@@ -19,17 +17,7 @@ export class PdfService {
     });
   }
 
-  /**
-   * Generates a PDF from HTML content with specified options and directly triggers the download.
-   * This method handles all asynchronous operations and the file download internally.
-   *
-   * @param htmlContent
-   * @param options
-
-   * @returns
-   */
   public async generatePdf(htmlContent: string, options: any): Promise<void> {
-    // <--- Method name reverted here!
     let backgroundImage: HTMLImageElement | null = null;
     if (options.backgroundImageSrc) {
       try {
@@ -44,11 +32,7 @@ export class PdfService {
     }
 
     return new Promise<void>((resolve, reject) => {
-      const doc = new jsPDF({
-        orientation: options.orientation,
-        unit: options.unit,
-        format: options.format,
-      });
+      const doc = new jsPDF(options);
 
       const pdfPageWidth = doc.internal.pageSize.getWidth();
       const pdfPageHeight = doc.internal.pageSize.getHeight();
@@ -85,19 +69,31 @@ export class PdfService {
           options.marginLeft,
         ],
         autoPaging: 'text',
-        width: pdfPageWidth - options.marginLeft - options.marginRight,
-        windowWidth: 1000,
+        html2canvas: options.html2canvas,
         callback: (finalDoc) => {
           (finalDoc as any).addPage = originalAddPage;
 
+          // This block handles the immediate download.
           try {
+            // 1. Generate the PDF as a 'blob' (a file-like object in the browser's memory).
             const pdfBlob: Blob = finalDoc.output('blob');
+
+            // 2. Create a temporary, local URL for this in-memory file.
             const url = URL.createObjectURL(pdfBlob);
+
+            // 3. Create a temporary, invisible link element.
             const a = document.createElement('a');
             a.href = url;
+
+            // 4. THIS IS THE KEY: The 'download' attribute tells the browser to download
+            // the file instead of navigating to the URL. We give it the desired filename.
             a.download = options.filename || 'document.pdf';
+
+            // 5. Add the link to the document and programmatically click it.
             document.body.appendChild(a);
             a.click();
+
+            // 6. Clean up by removing the temporary link and URL from memory.
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             resolve();
