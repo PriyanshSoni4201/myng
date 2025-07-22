@@ -52,7 +52,7 @@ export class PdfGeneratorComponent implements OnChanges {
     );
 
     this.constructedPages = contentChunks.map((chunk) =>
-      this._buildPreviewPageHtml(chunk, pageW_mm, pageH_mm)
+      this._buildPageHtml(chunk, pageW_mm, pageH_mm)
     );
     this.safePages = this.constructedPages.map((p) =>
       this.sanitizer.bypassSecurityTrustHtml(p)
@@ -76,12 +76,12 @@ export class PdfGeneratorComponent implements OnChanges {
     document.body.appendChild(measurementDiv);
 
     let currentPageNodes: Node[] = [];
-    Array.from(source.childNodes).forEach((node) => {
+    Array.from(source.children).forEach((element: Element) => {
       measurementDiv.innerHTML = '';
       currentPageNodes.forEach((n) =>
         measurementDiv.appendChild(n.cloneNode(true))
       );
-      measurementDiv.appendChild(node.cloneNode(true));
+      measurementDiv.appendChild(element.cloneNode(true));
 
       if (
         measurementDiv.offsetHeight > heightPx &&
@@ -90,9 +90,9 @@ export class PdfGeneratorComponent implements OnChanges {
         const chunkContainer = document.createElement('div');
         currentPageNodes.forEach((n) => chunkContainer.appendChild(n));
         chunks.push(chunkContainer.innerHTML);
-        currentPageNodes = [node.cloneNode(true)];
+        currentPageNodes = [element.cloneNode(true)];
       } else {
-        currentPageNodes.push(node.cloneNode(true));
+        currentPageNodes.push(element.cloneNode(true));
       }
     });
 
@@ -106,23 +106,21 @@ export class PdfGeneratorComponent implements OnChanges {
     return chunks;
   }
 
-  private _buildPreviewPageHtml(
+  private _buildPageHtml(
     contentChunk: string,
     widthMm: number,
     heightMm: number
   ): string {
     const contentWidthMm = widthMm - this.sideMarginMm * 2;
-    const temporaryStyles = 'border: 1px solid black; box-sizing: border-box;';
 
     return `
       <div class="pdf-page-container" style="width: ${widthMm}mm; height: ${heightMm}mm;">
         <img class="pdf-background-image" src="${this.backgroundImageSrc}" />
-        <div class="pdf-content-wrapper" style="display: flex; flex-direction: column; height: 100%;">
-            <div class="pdf-spacer-top" style="height: ${this.topMarginMm}mm; flex-shrink: 0; ${temporaryStyles}"></div>
-            <div class="pdf-content-area" style="width: ${contentWidthMm}mm; margin: 0 ${this.sideMarginMm}mm; flex-grow: 1; overflow: hidden;">
+        <div class="pdf-content-wrapper">
+            <div class="pdf-spacer-top" style="height: ${this.topMarginMm}mm;"></div>
+            <div class="pdf-content-area" style="width: ${contentWidthMm}mm; margin: 0 ${this.sideMarginMm}mm;">
               ${contentChunk}
             </div>
-            <div class="pdf-spacer-bottom" style="height: ${this.bottomMarginMm}mm; flex-shrink: 0; ${temporaryStyles}"></div>
         </div>
       </div>
     `;
@@ -132,9 +130,7 @@ export class PdfGeneratorComponent implements OnChanges {
     const doc = new jsPDF(this.options);
     const pageW_mm = doc.internal.pageSize.getWidth();
 
-    const inchesPerMm = 1 / 25.4;
-    const ppi = 96;
-    const windowWidthInPixels = pageW_mm * inchesPerMm * ppi;
+    const windowWidthInPixels = pageW_mm * (96 / 25.4);
 
     for (let i = 0; i < this.constructedPages.length; i++) {
       if (i > 0) {
@@ -142,11 +138,6 @@ export class PdfGeneratorComponent implements OnChanges {
       }
 
       const pageHtml = this.constructedPages[i];
-
-      // ** THE DEBUGGING STEP IS HERE **
-      // This will log the HTML for each page before it's rendered.
-      console.log(`--- HTML for PDF Page ${i + 1} ---`);
-      console.log(pageHtml);
 
       await doc.html(pageHtml, {
         autoPaging: false,
@@ -156,6 +147,10 @@ export class PdfGeneratorComponent implements OnChanges {
         windowWidth: windowWidthInPixels,
       });
     }
+
+    // ** THE REQUESTED CHANGE IS HERE **
+    // This line will remove the first page from the document right before it is saved.
+    doc.deletePage(1);
 
     doc.save(this.options.filename || 'document.pdf');
   }

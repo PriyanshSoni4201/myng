@@ -9,20 +9,23 @@ import { PdfGeneratorComponent } from '../pdf-generator/pdf-generator.component'
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
+  // Define the physical properties of the PDF document.
   pdfOptions = {
     unit: 'mm',
     format: 'a4',
     orientation: 'p',
-    filename: 'Correctly-Paginated-Document.pdf',
+    filename: 'Final-Document.pdf',
   };
 
+  // Define the blank space at the top, bottom, and sides in millimeters.
   topMarginMm = 30;
-  bottomMarginMm = 15;
+  bottomMarginMm = 30;
   sideMarginMm = 20;
 
+  // Provide the image source for the page background.
   backgroundImageSrc = 'public/bg.png';
 
-  // Added enough content to ensure it spans multiple pages.
+  // Provide the raw HTML content that needs to be paginated.
   mainContentHtml: string = `
     <h1>Native jsPDF Rendering with Selectable Text</h1>
     <p>This PDF is generated using jsPDF's native HTML renderer. The text you see here is fully selectable and searchable in the final document.</p>
@@ -41,10 +44,5 @@ export class HomeComponent {
     <h2>This Header Will Be on Page 2</h2>
     <p>The component's pagination logic measures the content above and correctly places this section onto the second page, respecting the defined top and bottom blank spaces.</p>
     <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-    
-    <h2>This Should Be on Page 3</h2>
-    <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?</p>
-    <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
   `;
 }
