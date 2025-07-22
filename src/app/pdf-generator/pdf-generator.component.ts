@@ -112,8 +112,6 @@ export class PdfGeneratorComponent implements OnChanges {
     heightMm: number
   ): string {
     const contentWidthMm = widthMm - this.sideMarginMm * 2;
-    // ** THE CHANGE IS HERE **
-    // The background color has been removed from the temporary styles.
     const temporaryStyles = 'border: 1px solid black; box-sizing: border-box;';
 
     return `
@@ -144,6 +142,11 @@ export class PdfGeneratorComponent implements OnChanges {
       }
 
       const pageHtml = this.constructedPages[i];
+
+      // ** THE DEBUGGING STEP IS HERE **
+      // This will log the HTML for each page before it's rendered.
+      console.log(`--- HTML for PDF Page ${i + 1} ---`);
+      console.log(pageHtml);
 
       await doc.html(pageHtml, {
         autoPaging: false,
