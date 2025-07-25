@@ -1,8 +1,34 @@
-<app-pdf-generator
-  [options]="pdfOptions"
-  [backgroundImageSrc]="backgroundImageSrc"
-  [mainContentHtml]="mainContentHtml"
-  [topMarginMm]="topMarginMm"
-  [bottomMarginMm]="bottomMarginMm"
-  [sideMarginMm]="sideMarginMm"
-></app-pdf-generator>
+<div class="page-container">
+  <div class="page-toolbar">
+    <button type="button" (click)="fileInput.click()" class="p-button">
+      Upload JSON File
+    </button>
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept=".json"
+      style="display: none"
+    />
+  </div>
+
+  <div class="generator-wrapper">
+    <!-- **CHANGE**: This part will only render if mainContentHtml is not null -->
+    <app-pdf-generator
+      *ngIf="mainContentHtml"
+      [options]="pdfOptions"
+      [backgroundImageSrc]="backgroundImageSrc"
+      [mainContentHtml]="mainContentHtml"
+      [topMarginMm]="topMarginMm"
+      [bottomMarginMm]="bottomMarginMm"
+      [sideMarginMm]="sideMarginMm"
+      (contentChange)="handleContentChange($event)"
+    ></app-pdf-generator>
+
+    <!-- **CHANGE**: This prompt shows only when mainContentHtml is null (the initial state) -->
+    <div *ngIf="!mainContentHtml" class="initial-prompt">
+      <h1>Please upload a JSON file to begin</h1>
+      <p>The PDF preview will appear here once the data is loaded.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,673 @@
+{
+  "patientInfo": {
+    "reportTitle": "CARDIOLOGY SUBSEQUENT CONSULTATION",
+    "patientName": "Aaradhana Rajeshwaran Balasubramanian",
+    "gender": "F",
+    "age": "35Y 10M",
+    "date": "25-Jun-2025",
+    "time": "18:15",
+    "uhid": "13121200000030",
+    "encounterNo": "RFT-20250618-0423",
+    "address": "Malad East, Mumbai",
+    "diagnosis": "Hypertension & Diabetes",
+    "consultant": "Dr. Abhinav Vapte MD DM",
+    "referredBy": "Dr. Anita Sharma",
+    "payerClass": "Self"
+  },
+  "pages": [
+    {
+      "pageNumber": 1,
+      "sections": [
+        {
+          "title": "Brief Patient History",
+          "type": "simple",
+          "content": "Suffered with diabetes"
+        },
+        {
+          "title": "Chief Complaints",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Chief Complaint", "width": "24%" },
+              { "label": "Duration", "width": "12%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Gastrointestinal<br>Neuroendocrine Tumors",
+                "5 Days",
+                "The patient reports experiencing a high fever of 101.5°F, accompanied by significant chills, overwhelming fatigue, and a persistent cough."
+              ],
+              [
+                "2",
+                "Cough",
+                "3 Days",
+                "The patient reports experiencing chills and profound fatigue. Additionally, they describe occasional chest pain that feels sharp and intensifies with deep breaths."
+              ],
+              [
+                "3",
+                "Chest Pain",
+                "12 Days",
+                "The patient is showing signs of chills and notable fatigue. They also mention a dry cough that is persistent and irritating, causing discomfort in the throat and occasionally leading to shortness of breath."
+              ]
+            ]
+          }
+        },
+        {
+          "title": "ODP/HPI",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Date", "width": "15%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "24-Dec-2003",
+                "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+              ],
+              [
+                "2",
+                "24-Dec-2003",
+                "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+              ],
+              [
+                "3",
+                "04-Jan-2006",
+                "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Past Medical History",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Disease", "width": "24%" },
+              { "label": "Onset Date", "width": "20%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              ["1", "Diabetes", "24 Dec 2003", "Uses Pump"],
+              ["2", "Asthama", "22 Dec 2003", "Occasional Spasms"],
+              ["3", "Diabetes", "14 Mar 2003", "Uses Pump"],
+              ["4", "Asthama", "17 Dec 2003", "Occasional Spasms"]
+            ]
+          }
+        },
+        {
+          "title": "Hospitalization & Surgical History",
+          "type": "table",
+          "table": {
+            "headers": [],
+            "rows": [
+              [
+                "<span style='font-weight: bold;'>No.</span>",
+                "<span colspan='5'>1</span>"
+              ],
+              [
+                "<span style='font-weight: bold;'>Diagnosis</span>",
+                "Heart Failure, Chest Pain",
+                "<span style='font-weight: bold;'>Diagnosis ICD Code</span>",
+                "12C65",
+                "<span style='font-weight: bold;'>Treatment</span>",
+                "Heart Transplant"
+              ],
+              [
+                "<span style='font-weight: bold;'>Care Professional</span>",
+                "Dr. Aarti Mehta",
+                "<span style='font-weight: bold;'>Care Provider</span>",
+                "Apollo Hospital",
+                "<span style='font-weight: bold;'>DOA</span>",
+                "24-Feb-2007"
+              ],
+              [
+                "<span style='font-weight: bold;'>DOD</span>",
+                "04-Mar-2007",
+                "<span style='font-weight: bold;'>Procedure</span>",
+                "Bypass",
+                "<span style='font-weight: bold;'>Procedure ICD Code</span>",
+                "12C65"
+              ],
+              [
+                "<span style='font-weight: bold;'>Surgeon</span>",
+                "Dr. Aarti Mehta",
+                "<span style='font-weight: bold;'>Date of Surgery</span>",
+                "28-Feb-2007",
+                "<span style='font-weight: bold;'>Remarks</span>",
+                "Operation successful"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 2,
+      "sections": [
+        {
+          "title": "Lifestyle & Social History",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Lifestyle", "width": "24%" },
+              { "label": "Parameters", "width": "35%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              ["1", "Diet", "Vegetariant", "Heart Transplant"],
+              ["2", "Diet", "Vegetariant", "Heart Transplant"]
+            ]
+          }
+        },
+        {
+          "title": "Family History",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Relation" },
+              { "label": "Current Age" },
+              { "label": "Disease" },
+              { "label": "Onset Age" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              ["1", "Father", "40", "Diabetes", "30", "Artem Life Care"],
+              [
+                "2",
+                "Grandfather",
+                "58",
+                "Hypertension",
+                "60",
+                "Artem Life Care"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Allergies & Hypersensitivity",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Allergy" },
+              { "label": "Allergen" },
+              { "label": "Type of Reaction" },
+              { "label": "Onset Date" },
+              { "label": "Severity" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Sulfa Drugs",
+                "Sulfonamide",
+                "Diabetes",
+                "53",
+                "Medium",
+                "Artem Life Care"
+              ],
+              [
+                "2",
+                "Grandfather",
+                "Sulfonamide",
+                "Hypertension",
+                "53",
+                "Low",
+                "Artem Life Care"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Current Medications",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Medications" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Dolo 650 Paracetamol 1-1-1 times a day prescribed by Dr. Aditi Parekh since 5 Days Immediately after Meals"
+              ],
+              [
+                "2",
+                "Dolo 650 Paracetamol 1-0-1 times a day prescribed by Dr. Shantanu Wankhede since 5 Days Before Lunch & Dinner"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Review of Systems",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Review of Systems" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Reports no fever, chills, night sweats, or weight loss. Reports no chest pain or shortness of breath. Reports no cough, sputum production, or wheezing. Experiences excessive thirst, frequent urination, and heat intolerance."
+              ],
+              [
+                "2",
+                "Denies fever, chills, night sweats, weight loss. Denies chest pain, shortness of breath. Denies cough, sputum production, wheezing. Excessive thirst, frequent urination, or heat intolerance."
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Previous Investigations",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Investigation", "width": "30%" },
+              { "label": "Care Provider", "width": "30%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "MRI of RT Thigh",
+                "Artem Life Care",
+                "Results were critical, reports are available"
+              ],
+              ["2", "Diet", "Vegetariant", "Heart Transplant"]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 3,
+      "sections": [
+        {
+          "title": "Vitals",
+          "type": "vitals",
+          "vitals": [
+            { "label": "Pulse", "value": 78, "unit": "bpm" },
+            { "label": "SBP", "value": 45, "unit": "mmHg" },
+            { "label": "DBP", "value": 70, "unit": "mmHg" },
+            { "label": "Temp", "value": 36, "unit": "°C" },
+            { "label": "RR", "value": 18, "unit": "bpm" },
+            { "label": "SPO2", "value": 96, "unit": "%" },
+            { "label": "Height", "value": 174, "unit": "cm" },
+            { "label": "Weight", "value": 54, "unit": "kg" },
+            { "label": "BMI", "value": 18.3, "unit": "" },
+            { "label": "PEFR", "value": 90, "unit": "" },
+            { "label": "RBS", "value": 78, "unit": "mg" }
+          ]
+        },
+        {
+          "title": "General Examination",
+          "type": "generalExamination",
+          "items": [
+            { "label": "Level of Consciousness", "value": "Alert" },
+            { "label": "Distress", "value": "Chest Pain" },
+            { "label": "Hygiene and Grooming", "value": "Adequately Groomed" },
+            {
+              "label": "Build and Nutrition",
+              "value": "Normal Build and Well-Nourished"
+            },
+            { "label": "Head & Face", "value": "Normal shape, no swelling" },
+            { "label": "Facial Expression", "value": "Anxiety" },
+            { "label": "Eyes", "value": "Clear, no redness" },
+            { "label": "Skin", "value": "No rash or marks" },
+            { "label": "Neck", "value": "Normal, no swelling" },
+            { "label": "Lymph Nodes", "value": "Not swollent" },
+            { "label": "Mouth & Throat", "value": "No sores, throat normal" },
+            {
+              "label": "Mental Status and Behavior",
+              "value": "Calm and cooperative"
+            },
+            { "label": "Spine", "value": "Straight, no pain" },
+            { "label": "Extremities", "value": "No injuries" },
+            { "label": "Extremities", "value": "No swelling, normal" }
+          ]
+        }
+      ]
+    },
+    {
+      "pageNumber": 4,
+      "sections": [
+        {
+          "title": "Primary Diagnosis",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Type" },
+              { "label": "Diagnosis" },
+              { "label": "ICD 10 Code" },
+              { "label": "Onset Date" },
+              { "label": "Status" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Final Diagnosis",
+                "Diabetes Mellitus Type 2",
+                "11.52.607",
+                "22-Dec-2004",
+                "Cured",
+                "Artem Life Care"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Secondary Diagnosis",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Type" },
+              { "label": "Diagnosis" },
+              { "label": "ICD 10 Code" },
+              { "label": "Onset Date" },
+              { "label": "Status" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Final Diagnosis",
+                "Diabetes Mellitus Type 2",
+                "11.52.607",
+                "22-Dec-2004",
+                "Cured",
+                "Artem Life Care"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Known Diagnosis (PMH)",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "6%" },
+              { "label": "Type" },
+              { "label": "Diagnosis" },
+              { "label": "ICD 10 Code" },
+              { "label": "Onset Date" },
+              { "label": "Status" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Final Diagnosis",
+                "Diabetes Mellitus Type 2",
+                "11.52.607",
+                "22-Dec-2004",
+                "Cured",
+                "Artem Life Care"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 5,
+      "sections": [
+        {
+          "title": "Intermittent Medication",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "5%" },
+              { "label": "Order" },
+              { "label": "Route" },
+              { "label": "Start Date | Time" },
+              { "label": "Frequency" },
+              { "label": "Dosage" },
+              { "label": "Dur." },
+              { "label": "Qty." },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Echimococus<br>Granulosis IgG & IgM",
+                "PO",
+                "23-Apr-2025 | 12:09",
+                "24hrs 10AM",
+                "1-1-1",
+                "99 D",
+                "14",
+                "Take after food"
+              ],
+              [
+                "2",
+                "Tab. DFL 6 mg<br>Deflazacort.",
+                "Oral",
+                "23-Apr-2025 | 12:09",
+                "12hrs",
+                "1-0-1",
+                "111 D",
+                "14",
+                "Given as trial dose"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Continuous Medication",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "5%" },
+              { "label": "Order" },
+              { "label": "Start Date | Time" },
+              { "label": "Duration" },
+              { "label": "Infusion By" },
+              { "label": "Rate" },
+              { "label": "Qty." },
+              { "label": "Suggested Dose" }
+            ],
+            "rows": [
+              [
+                "1",
+                "DOLONEX 40 MG INJ.",
+                "23-Apr-2025 | 12:09",
+                "99 D",
+                "Syringe pump",
+                "1 ml/min",
+                "1 unit",
+                "1 mcg/kg/min"
+              ],
+              [
+                "2",
+                "ZZ DEXREST TAB",
+                "23-Apr-2025 | 12:09",
+                "111 D",
+                "Syringe pump",
+                "1 ml/min",
+                "1 unit",
+                "1 mcg/kg/min"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Services",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "No.", "width": "5%" },
+              { "label": "Order" },
+              { "label": "Date | Time" },
+              { "label": "Care Provider" },
+              { "label": "Department" },
+              { "label": "Dept. Head" },
+              { "label": "Indication" }
+            ],
+            "rows": [
+              [
+                "1",
+                "Physicians<br>consultation",
+                "23-Apr-2025 | 12:09",
+                "Nair Hospital",
+                "Pathology",
+                "Dr. Samir S Nanavati",
+                "General admission"
+              ],
+              [
+                "2",
+                "Oxygen",
+                "23-Apr-2025 | 12:09",
+                "Colaba",
+                "Cardiology",
+                "Dr. Deepak Vora",
+                "General admission"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "",
+          "type": "signature"
+        }
+      ]
+    },
+    {
+      "pageNumber": 6,
+      "sections": [
+        {
+          "title": "Diet Instruction",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Suggested", "width": "33.3%" },
+              { "label": "Restricted", "width": "33.3%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "• Complete bed rest, Physiotherapy, Take Rest<br>• ENT opinion, Pulmonologist opinion",
+                "• Avoid heavy exercise until cleared by your healthcare provider<br>• Avoid high-risk activities that may cause falls or injury",
+                "• Avoid skipping meals to maintain metabolic balance<br>• Avoid high-risk activities that may cause falls or injury"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Physical Activity Instruction",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Suggested", "width": "33.3%" },
+              { "label": "Restricted", "width": "33.3%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "• Complete bed rest, Physiotherapy, Take Rest<br>• ENT opinion, Pulmonologist opinion",
+                "• Avoid heavy exercise until cleared by your healthcare provider<br>• Avoid high-risk activities that may cause falls or injury",
+                "• Avoid skipping meals to maintain metabolic balance<br>• Avoid high-risk activities that may cause falls or injury"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "General Instruction",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Suggested", "width": "33.3%" },
+              { "label": "Restricted", "width": "33.3%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "• Complete bed rest, Physiotherapy, Take Rest<br>• ENT opinion, Pulmonologist opinion",
+                "• Avoid heavy exercise until cleared by your healthcare provider<br>• Avoid high-risk activities that may cause falls or injury",
+                "• Avoid skipping meals to maintain metabolic balance<br>• Avoid high-risk activities that may cause falls or injury"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Follow up",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Start Time" },
+              { "label": "End Time" },
+              { "label": "Purpose Type" },
+              { "label": "Appoint. Mode" },
+              { "label": "Remarks" },
+              { "label": "Ref. Doctor" }
+            ],
+            "rows": [
+              [
+                "03:12 PM",
+                "03:12 PM",
+                "Physiotherapy Care",
+                "By Telephonic",
+                "continue exercises daily",
+                "Dr. Amit Kumar Shah"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "When to Contact",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Suggested", "width": "33.3%" },
+              { "label": "Restricted", "width": "33.3%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "• Complete bed rest, Physiotherapy, Take Rest<br>• ENT opinion, Pulmonologist opinion",
+                "• Avoid heavy exercise until cleared by your healthcare provider<br>• Avoid high-risk activities that may cause falls or injury",
+                "• Avoid skipping meals to maintain metabolic balance<br>• Avoid high-risk activities that may cause falls or injury"
+              ]
+            ]
+          }
+        },
+        {
+          "title": "Information (Patient Education Material)",
+          "type": "table",
+          "table": {
+            "headers": [
+              { "label": "Suggested", "width": "33.3%" },
+              { "label": "Restricted", "width": "33.3%" },
+              { "label": "Remarks" }
+            ],
+            "rows": [
+              [
+                "• Complete bed rest, Physiotherapy, Take Rest<br>• ENT opinion, Pulmonologist opinion",
+                "• Avoid heavy exercise until cleared by your healthcare provider<br>• Avoid high-risk activities that may cause falls or injury",
+                "• Avoid skipping meals to maintain metabolic balance<br>• Avoid high-risk activities that may cause falls or injury"
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "signature": {
+    "name": "Dr. Shantanu Wankhede",
+    "credentials": "MD., DM. (Cardiology)",
+    "registrationNo": "MH-124085"
+  }
+}

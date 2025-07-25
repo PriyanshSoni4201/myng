@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output, // Import Output
+  EventEmitter, // Import EventEmitter
   OnChanges,
   SimpleChanges,
   ViewEncapsulation,
@@ -26,81 +28,78 @@ export class PdfGeneratorComponent implements OnChanges {
   @Input() bottomMarginMm: number = 0;
   @Input() sideMarginMm: number = 0;
 
+  // Emits the new HTML content when the editor saves a change.
+  @Output() contentChange = new EventEmitter<string>();
+
   private constructedPages: string[] = [];
   protected safePages: SafeHtml[] = [];
 
   // State for the editor
   protected isEditing = false;
   protected editingContent = '';
-  private activeEditTarget: {
-    type: 'edit' | 'insert';
-    element: Element;
-  } | null = null;
+  // Store the ID of the element being edited for reliability.
+  private activeEditTargetId: string | null = null;
 
   constructor(private sanitizer: DomSanitizer) {}
 
+  /**
+   * BUG FIX: This now correctly re-renders the preview whenever the
+   * mainContentHtml input changes. The old logic was blocking updates.
+   */
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['mainContentHtml'] &&
-      !changes['mainContentHtml'].isFirstChange()
-    ) {
-      // Avoid re-paginating if the change came from the editor itself
-      return;
+    if (changes['mainContentHtml']) {
+      this.constructPages();
     }
-    this.constructPages();
   }
 
-  protected handleDblClick(event: MouseEvent, pageIndex: number): void {
+  /**
+   * When a user double-clicks, we find the element, get its unique ID,
+   * and open the editor with its content.
+   */
+  protected handleDblClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-
-    // Find the direct child of the content area that was clicked
-    const elementToEdit = target.closest('.pdf-content-area > *');
+    const elementToEdit = target.closest('.pdf-content-area > *[id]');
 
     if (elementToEdit) {
-      // Edit existing element
-      this.activeEditTarget = { type: 'edit', element: elementToEdit };
+      this.activeEditTargetId = elementToEdit.id;
       this.editingContent = elementToEdit.innerHTML;
-      this.isEditing = true;
-    } else if (target.closest('.pdf-content-area')) {
-      // Insert new element
-      this.activeEditTarget = { type: 'insert', element: target };
-      this.editingContent = ''; // Start with an empty editor
       this.isEditing = true;
     }
   }
 
+  /**
+   * When the editor saves, we find the element by its ID in a temporary
+   * copy of the HTML, update it, and emit the full new HTML string
+   * back to the parent component.
+   */
   protected handleSave(newContent: string): void {
-    if (!this.activeEditTarget) return;
+    if (!this.activeEditTargetId) return;
 
-    const previewPages = document.querySelectorAll(
-      '.preview-page-wrapper .pdf-content-area'
+    // Create a temporary, non-rendered element to safely manipulate the HTML
+    const tempContainer = document.createElement('div');
+    tempContainer.innerHTML = this.mainContentHtml;
+
+    // Find the element to update using its unique ID
+    const elementToUpdate = tempContainer.querySelector(
+      `#${this.activeEditTargetId}`
     );
-    let fullHtml = '';
 
-    if (this.activeEditTarget.type === 'edit') {
-      this.activeEditTarget.element.innerHTML = newContent;
-    } else if (this.activeEditTarget.type === 'insert') {
-      const newElement = document.createElement('p');
-      newElement.innerHTML = newContent;
-      this.activeEditTarget.element.appendChild(newElement);
+    if (elementToUpdate) {
+      elementToUpdate.innerHTML = newContent;
+      // Emit the full, updated HTML string to the parent component.
+      this.contentChange.emit(tempContainer.innerHTML);
     }
 
-    // Reconstruct the mainContentHtml from the live DOM
-    previewPages.forEach((page) => {
-      fullHtml += (page as HTMLElement).innerHTML;
-    });
-
-    this.mainContentHtml = fullHtml;
-    this.constructPages(); // Re-paginate and render
     this.handleCancel(); // Close the editor
   }
 
   protected handleCancel(): void {
     this.isEditing = false;
-    this.activeEditTarget = null;
+    this.activeEditTargetId = null;
     this.editingContent = '';
   }
 
+  // No changes needed for the methods below
   private constructPages(): void {
     const tempDoc = new jsPDF(this.options);
     const pageW_mm = tempDoc.internal.pageSize.getWidth();
@@ -179,6 +178,7 @@ export class PdfGeneratorComponent implements OnChanges {
     heightMm: number
   ): string {
     const contentWidthMm = widthMm - this.sideMarginMm * 2;
+
     return `
       <div class="pdf-page-container" style="width: ${widthMm}mm; height: ${heightMm}mm;">
         <img class="pdf-background-image" src="${this.backgroundImageSrc}" />
@@ -195,11 +195,16 @@ export class PdfGeneratorComponent implements OnChanges {
   public async downloadPdf(): Promise<void> {
     const doc = new jsPDF(this.options);
     const pageW_mm = doc.internal.pageSize.getWidth();
+
     const windowWidthInPixels = pageW_mm * (96 / 25.4);
 
     for (let i = 0; i < this.constructedPages.length; i++) {
-      if (i > 0) doc.addPage();
+      if (i > 0) {
+        doc.addPage();
+      }
+
       const pageHtml = this.constructedPages[i];
+
       await doc.html(pageHtml, {
         autoPaging: false,
         x: 0,
@@ -210,6 +215,7 @@ export class PdfGeneratorComponent implements OnChanges {
     }
 
     doc.deletePage(1);
+
     doc.save(this.options.filename || 'document.pdf');
   }
 }
