@@ -42,7 +42,6 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "public",
               "src/favicon.ico",
               "src/assets",
               {
@@ -101,7 +100,6 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "public",
               {
                 "glob": "**/*",
                 "input": "public",
