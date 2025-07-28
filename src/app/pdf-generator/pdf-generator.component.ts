@@ -1,3 +1,5 @@
+// pdf-generator.component.ts
+
 import {
   Component,
   Input,
@@ -20,16 +22,21 @@ import { EditorComponent } from '../editor/editor.component';
 })
 export class PdfGeneratorComponent implements OnChanges {
   @Input() options: any = { unit: 'mm', format: 'a4' };
-  @Input() backgroundImageSrc: string = '';
-  @Input() mainContentHtml: string = '';
-  @Input() topMarginMm: number = 0;
-  @Input() bottomMarginMm: number = 0;
   @Input() sideMarginMm: number = 0;
+
+  // NEW: Inputs for header and footer
+  @Input() headerHtml: string = '';
+  @Input() footerHtml: string = '';
+  @Input() headerHeightMm: number = 35; // As requested
+  @Input() footerHeightMm: number = 30; // As requested
+
+  // The main content that will be paginated
+  @Input() mainContentHtml: string = '';
 
   private constructedPages: string[] = [];
   protected safePages: SafeHtml[] = [];
 
-  // State for the editor
+  // State for the editor (no changes needed here)
   protected isEditing = false;
   protected editingContent = '';
   private activeEditTarget: {
@@ -44,39 +51,33 @@ export class PdfGeneratorComponent implements OnChanges {
       changes['mainContentHtml'] &&
       !changes['mainContentHtml'].isFirstChange()
     ) {
-      // Avoid re-paginating if the change came from the editor itself
       return;
     }
     this.constructPages();
   }
 
+  // No changes needed for the editor handling methods (handleDblClick, handleSave, handleCancel)
   protected handleDblClick(event: MouseEvent, pageIndex: number): void {
     const target = event.target as HTMLElement;
-
-    // Find the direct child of the content area that was clicked
     const elementToEdit = target.closest('.pdf-content-area > *');
 
     if (elementToEdit) {
-      // Edit existing element
       this.activeEditTarget = { type: 'edit', element: elementToEdit };
       this.editingContent = elementToEdit.innerHTML;
       this.isEditing = true;
     } else if (target.closest('.pdf-content-area')) {
-      // Insert new element
       this.activeEditTarget = { type: 'insert', element: target };
-      this.editingContent = ''; // Start with an empty editor
+      this.editingContent = '';
       this.isEditing = true;
     }
   }
 
   protected handleSave(newContent: string): void {
     if (!this.activeEditTarget) return;
-
     const previewPages = document.querySelectorAll(
       '.preview-page-wrapper .pdf-content-area'
     );
     let fullHtml = '';
-
     if (this.activeEditTarget.type === 'edit') {
       this.activeEditTarget.element.innerHTML = newContent;
     } else if (this.activeEditTarget.type === 'insert') {
@@ -84,15 +85,12 @@ export class PdfGeneratorComponent implements OnChanges {
       newElement.innerHTML = newContent;
       this.activeEditTarget.element.appendChild(newElement);
     }
-
-    // Reconstruct the mainContentHtml from the live DOM
     previewPages.forEach((page) => {
       fullHtml += (page as HTMLElement).innerHTML;
     });
-
     this.mainContentHtml = fullHtml;
-    this.constructPages(); // Re-paginate and render
-    this.handleCancel(); // Close the editor
+    this.constructPages();
+    this.handleCancel();
   }
 
   protected handleCancel(): void {
@@ -109,8 +107,10 @@ export class PdfGeneratorComponent implements OnChanges {
     const previewWidthPx = 700;
     const pxPerMm = previewWidthPx / pageW_mm;
     const contentW_px = (pageW_mm - this.sideMarginMm * 2) * pxPerMm;
+
+    // UPDATED: Calculate content height based on header and footer sizes
     const contentH_px =
-      (pageH_mm - this.topMarginMm - this.bottomMarginMm) * pxPerMm;
+      (pageH_mm - this.headerHeightMm - this.footerHeightMm) * pxPerMm;
 
     const contentChunks = this._paginateContent(
       this.mainContentHtml,
@@ -118,14 +118,25 @@ export class PdfGeneratorComponent implements OnChanges {
       contentH_px
     );
 
-    this.constructedPages = contentChunks.map((chunk) =>
-      this._buildPageHtml(chunk, pageW_mm, pageH_mm)
-    );
+    // UPDATED: Pass the page number to the build function
+    this.constructedPages = contentChunks.map((chunk, index) => {
+      const pageNumber = index + 1;
+      const totalPages = contentChunks.length;
+      return this._buildPageHtml(
+        chunk,
+        pageW_mm,
+        pageH_mm,
+        pageNumber,
+        totalPages
+      );
+    });
+
     this.safePages = this.constructedPages.map((p) =>
       this.sanitizer.bypassSecurityTrustHtml(p)
     );
   }
 
+  // The pagination logic itself doesn't need to change, as it correctly uses the calculated height
   private _paginateContent(
     html: string,
     widthPx: number,
@@ -173,29 +184,46 @@ export class PdfGeneratorComponent implements OnChanges {
     return chunks;
   }
 
+  // REWRITTEN: This function now builds the page with a dedicated header, content, and footer
   private _buildPageHtml(
     contentChunk: string,
     widthMm: number,
-    heightMm: number
+    heightMm: number,
+    pageNumber: number,
+    totalPages: number
   ): string {
     const contentWidthMm = widthMm - this.sideMarginMm * 2;
+
+    // Replace placeholders in the footer
+    const processedFooter = this.footerHtml
+      .replace(/{{PAGE_NUMBER}}/g, pageNumber.toString())
+      .replace(/{{TOTAL_PAGES}}/g, totalPages.toString());
+
     return `
       <div class="pdf-page-container" style="width: ${widthMm}mm; height: ${heightMm}mm;">
-        <img class="pdf-background-image" src="${this.backgroundImageSrc}" />
-        <div class="pdf-content-wrapper">
-            <div class="pdf-spacer-top" style="height: ${this.topMarginMm}mm;"></div>
-            <div class="pdf-content-area" style="width: ${contentWidthMm}mm; margin: 0 ${this.sideMarginMm}mm;">
-              ${contentChunk}
-            </div>
+        <!-- Header Section -->
+        <div class="pdf-header" style="height: ${this.headerHeightMm}mm; padding: 0 ${this.sideMarginMm}mm;">
+          ${this.headerHtml}
+        </div>
+
+        <!-- Content Section (the "working space") -->
+        <div class="pdf-content-area" style="padding: 0 ${this.sideMarginMm}mm;">
+          ${contentChunk}
+        </div>
+
+        <!-- Footer Section -->
+        <div class="pdf-footer" style="height: ${this.footerHeightMm}mm; padding: 0 ${this.sideMarginMm}mm;">
+          ${processedFooter}
         </div>
       </div>
     `;
   }
 
+  // No changes needed for downloadPdf
   public async downloadPdf(): Promise<void> {
     const doc = new jsPDF(this.options);
     const pageW_mm = doc.internal.pageSize.getWidth();
-    const windowWidthInPixels = pageW_mm * (96 / 25.4);
+    const windowWidthInPixels = pageW_mm * (96 / 25.4); // 96 DPI is a common screen resolution
 
     for (let i = 0; i < this.constructedPages.length; i++) {
       if (i > 0) doc.addPage();
@@ -209,7 +237,7 @@ export class PdfGeneratorComponent implements OnChanges {
       });
     }
 
-    doc.deletePage(1);
+    doc.deletePage(1); // jsPDF adds a blank first page by default
     doc.save(this.options.filename || 'document.pdf');
   }
 }

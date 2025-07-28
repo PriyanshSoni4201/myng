@@ -1,8 +1,11 @@
+<!-- home.component.html -->
+
 <app-pdf-generator
   [options]="pdfOptions"
-  [backgroundImageSrc]="backgroundImageSrc"
-  [mainContentHtml]="mainContentHtml"
-  [topMarginMm]="topMarginMm"
-  [bottomMarginMm]="bottomMarginMm"
   [sideMarginMm]="sideMarginMm"
+  [headerHtml]="headerHtml"
+  [footerHtml]="footerHtml"
+  [headerHeightMm]="headerHeight"
+  [footerHeightMm]="footerHeight"
+  [mainContentHtml]="mainContentHtml"
 ></app-pdf-generator>

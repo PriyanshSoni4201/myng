@@ -1,4 +1,7 @@
+/* pdf-generator.component.css */
+
 /* Styles for the component's UI (toolbar, background, etc.) */
+/* ... (no changes to .generator-container, .toolbar, .preview-area, etc.) ... */
 .generator-container {
   display: flex;
   flex-direction: column;
@@ -38,29 +41,36 @@
   margin-bottom: 8px;
 }
 
-/* Styles for the HTML that gets injected into both the preview and the PDF */
+/* 
+  Styles for the HTML that gets injected into both the preview and the PDF.
+  These are the most important changes.
+*/
+
 .pdf-page-container {
-  position: relative;
-  overflow: hidden;
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack header, content, and footer vertically */
+  background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border: 1px solid #ced4da;
-  background-color: white; /* Fallback color */
+  overflow: hidden; /* Important for clean rendering */
 }
-.pdf-background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* Sits behind the content */
+
+.pdf-header {
+  flex-shrink: 0; /* Prevents the header from shrinking */
+  box-sizing: border-box;
 }
-.pdf-content-wrapper {
-  position: relative; /* Sits on top of the background */
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-}
+
 .pdf-content-area {
+  flex-grow: 1; /* Allows the content to fill the available space */
+  overflow: hidden; /* Prevents content from spilling out */
+  box-sizing: border-box;
   font-family: Times, serif;
   color: #333;
 }
+
+.pdf-footer {
+  flex-shrink: 0; /* Prevents the footer from shrinking */
+  box-sizing: border-box;
+}
+
+/* REMOVED: .pdf-background-image, .pdf-content-wrapper, .pdf-spacer-top as they are no longer used */
