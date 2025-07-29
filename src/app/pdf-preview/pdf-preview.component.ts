@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-// THE FIX IS HERE: Ensure the import path is all lowercase to match the new filename.
 import { HtmlGeneratorService } from '../services/html-generator.service';
 import { PdfService } from '../services/pdf.service';
 
@@ -23,6 +22,8 @@ export class PdfPreviewComponent implements OnInit {
 
   private headerBase64: string = '';
   private footerBase64: string = '';
+  private pageTitle: string = '';
+  private showPageTitleOnAllPage: boolean = false;
 
   private finalPaginatedHtml: string = '';
   private finalServerHtml: string = '';
@@ -39,9 +40,14 @@ export class PdfPreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get<any>('assets/data/report.json').subscribe((data) => {
-      this.headerBase64 = data.headerImage;
-      this.footerBase64 = data.footerImage;
-      const bodyContentHtml = this.htmlGenerator.generateBodyHtml(data.content);
+      this.headerBase64 = data.header.headerImage;
+      this.footerBase64 = data.footer.footerImage;
+      this.pageTitle = data.pageTitle;
+      this.showPageTitleOnAllPage = data.showPageTitleOnAllPage;
+
+      const bodyContentHtml = this.htmlGenerator.generateBodyHtml(
+        data.contentMaster.contentItems
+      );
 
       this.finalPaginatedHtml = this.constructPaginatedHtml(bodyContentHtml);
       this.safeHtmlForPreview = this.sanitizer.bypassSecurityTrustHtml(
@@ -138,10 +144,16 @@ export class PdfPreviewComponent implements OnInit {
     const headerHtml = `<div class="header"><img src="${this.headerBase64}"></div>`;
     const footerHtml = `<div class="footer"><img src="${this.footerBase64}"></div>`;
 
+    let finalContent = contentChunk;
+    if (this.showPageTitleOnAllPage && this.pageTitle) {
+      const titleHtml = `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${this.pageTitle}</div>`;
+      finalContent = titleHtml + contentChunk;
+    }
+
     return `
       <div class="page-container">
         ${headerHtml}
-        <div class="content-area">${contentChunk}</div>
+        <div class="content-area">${finalContent}</div>
         ${footerHtml}
       </div>
     `;
@@ -150,6 +162,12 @@ export class PdfPreviewComponent implements OnInit {
   private buildFinalHtmlForServer(bodyContent: string): string {
     const headerHtml = `<div class="header"><img src="${this.headerBase64}"></div>`;
     const footerHtml = `<div class="footer"><img src="${this.footerBase64}"></div>`;
+
+    let finalBodyContent = bodyContent;
+    if (this.showPageTitleOnAllPage && this.pageTitle) {
+      const titleHtml = `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${this.pageTitle}</div>`;
+      finalBodyContent = titleHtml + bodyContent;
+    }
 
     return `
       <!DOCTYPE html>
@@ -169,7 +187,7 @@ export class PdfPreviewComponent implements OnInit {
         <body>
           ${headerHtml}
           ${footerHtml}
-          <main>${bodyContent}</main>
+          <main>${finalBodyContent}</main>
         </body>
       </html>
     `;

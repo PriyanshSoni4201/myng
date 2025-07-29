@@ -4,26 +4,58 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class TemplateLibraryService {
-  private templates: { [key: string]: string } = {
-    header_title: `
-      <div style="width: 100%; text-align: center; margin: 20px 0; font-family: sans-serif; font-weight: bold; font-size: 16px;">
-        ${'TEXT'}
-      </div>
-    `,
-  };
-
   constructor() {}
 
-  public getSnippet(key: string, data: any): string {
-    let template = this.templates[key];
-    if (!template) {
-      return `<div style="color: red;">Unknown component: ${key}</div>`;
+  public getSnippet(item: any): string {
+    if (item.isHeaderComponent) {
+      return this.buildPatientHeader(item);
     }
+    return `<div style="color: #ccc; border: 1px dashed #ccc; padding: 10px; margin-top: 15px;">(Component type not yet implemented)</div>`;
+  }
 
-    for (const dataKey in data) {
-      const placeholder = '${' + dataKey.toUpperCase() + '}';
-      template = template.replace(new RegExp(placeholder, 'g'), data[dataKey]);
-    }
-    return template;
+  private buildPatientHeader(item: any): string {
+    const headerTitle = item.header || '';
+    const tableData = item.tableData || {};
+    const entries = Object.entries(tableData);
+    const midPoint = Math.ceil(entries.length / 2);
+
+    const leftColumnEntries = entries.slice(0, midPoint);
+    const rightColumnEntries = entries.slice(midPoint);
+
+    const createColumnHtml = (columnEntries: [string, unknown][]): string => {
+      return columnEntries
+        .map(
+          ([key, value]) => `
+        <tr>
+          <td style="padding: 2px 8px 2px 2px; font-weight: bold; vertical-align: top;">${key}</td>
+          <td style="padding: 2px; vertical-align: top;">${value}</td>
+        </tr>
+      `
+        )
+        .join('');
+    };
+
+    const leftColumnHtml = createColumnHtml(leftColumnEntries);
+    const rightColumnHtml = createColumnHtml(rightColumnEntries);
+
+    return `
+      <div style="margin-top: 15px; font-family: sans-serif; font-size: 12px;">
+        <div style="font-weight: bold; font-size: 14px; border-bottom: 2px solid #333; padding-bottom: 4px; margin-bottom: 8px;">
+          ${headerTitle}
+        </div>
+        <div style="display: flex; width: 100%;">
+          <div style="width: 50%; padding-right: 15px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tbody>${leftColumnHtml}</tbody>
+            </table>
+          </div>
+          <div style="width: 50%; padding-left: 15px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tbody>${rightColumnHtml}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
   }
 }

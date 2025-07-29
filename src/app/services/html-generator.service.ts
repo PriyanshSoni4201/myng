@@ -8,11 +8,11 @@ export class HtmlGeneratorService {
   constructor(private templateLibrary: TemplateLibraryService) {}
 
   public generateBodyHtml(contentItems: any[]): string {
-    if (!Array.isArray(contentItems)) return '';
+    if (!Array.isArray(contentItems)) {
+      return '';
+    }
     return contentItems
-      .map((item: any) =>
-        this.templateLibrary.getSnippet(item.component, item.data)
-      )
+      .map((item) => this.templateLibrary.getSnippet(item))
       .join('');
   }
 }
