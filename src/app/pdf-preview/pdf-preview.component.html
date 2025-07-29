@@ -1,0 +1,21 @@
+<div class="generator-container">
+  <div class="toolbar">
+    <h2>PDF Preview</h2>
+    <div>
+      <button
+        (click)="downloadWithJsPDF()"
+        [disabled]="isLoading"
+        style="margin-right: 10px"
+      >
+        Download (jsPDF)
+      </button>
+      <button (click)="downloadWithServer()" [disabled]="isLoading">
+        Download (Server PDF)
+      </button>
+    </div>
+  </div>
+  <div class="preview-area">
+    <div *ngIf="isLoading" class="loading-spinner"></div>
+    <div [innerHTML]="safeHtmlForPreview"></div>
+  </div>
+</div>

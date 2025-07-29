@@ -9,6 +9,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
 })
 export class AppComponent {
-  // Renamed to AppComponent
+
   protected readonly title = signal('myngpdf');
 }
