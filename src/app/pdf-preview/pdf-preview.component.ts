@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
-import { HtmlGeneratorService } from '../services/Html-Generator.Service';
+// THE FIX IS HERE: Ensure the import path is all lowercase to match the new filename.
+import { HtmlGeneratorService } from '../services/html-generator.service';
 import { PdfService } from '../services/pdf.service';
 
 @Component({
