@@ -4,11 +4,13 @@ import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { HtmlGeneratorService } from '../services/html-generator.service';
 import { PdfService } from '../services/pdf.service';
+import { TemplateLibraryService } from '../services/template-library.service'; // We need this for the body content
 
 @Component({
   selector: 'app-pdf-preview',
   standalone: true,
   imports: [CommonModule],
+  providers: [TemplateLibraryService], // Provide the library service
   templateUrl: './pdf-preview.component.html',
   styleUrls: ['./pdf-preview.component.css'],
 })
@@ -20,10 +22,8 @@ export class PdfPreviewComponent implements OnInit {
   private readonly SIDE_MARGIN_MM = 10;
   private readonly PREVIEW_WIDTH_PX = 700;
 
-  private headerBase64: string = '';
-  private footerBase64: string = '';
-  private pageTitle: string = '';
-  private showPageTitleOnAllPage: boolean = false;
+  private headerTemplate: string = '';
+  private footerTemplate: string = '';
 
   private finalPaginatedHtml: string = '';
   private finalServerHtml: string = '';
@@ -40,26 +40,29 @@ export class PdfPreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get<any>('assets/data/report.json').subscribe((data) => {
-      this.headerBase64 = data.header.headerImage;
-      this.footerBase64 = data.footer.footerImage;
-      this.pageTitle = data.pageTitle;
-      this.showPageTitleOnAllPage = data.showPageTitleOnAllPage;
+      // 1. Generate the header and footer TEMPLATES
+      this.headerTemplate = this.htmlGenerator.generateHeaderHtml(data.header);
+      this.footerTemplate = this.htmlGenerator.generateFooterHtml(data.footer);
 
+      // 2. Generate the raw BODY content
       const bodyContentHtml = this.htmlGenerator.generateBodyHtml(
-        data.contentMaster.contentItems
+        data.contentMaster.contentItems,
+        data.pageTitle,
+        data.showPageTitleOnAllPage
       );
 
+      // 3. Paginate the body and construct the final page divs
       this.finalPaginatedHtml = this.constructPaginatedHtml(bodyContentHtml);
       this.safeHtmlForPreview = this.sanitizer.bypassSecurityTrustHtml(
         this.finalPaginatedHtml
       );
 
-      this.finalServerHtml = this.buildFinalHtmlForServer(bodyContentHtml);
-
-      console.log('--- FLAWLESS HTML FOR PREVIEW / JSPDF (Paginated Divs) ---');
-      console.log(this.finalPaginatedHtml);
-      console.log('--- FLAWLESS HTML FOR SERVER (Single Document) ---');
-      console.log(this.finalServerHtml);
+      // 4. Build the separate HTML for the server
+      this.finalServerHtml = this.buildFinalHtmlForServer(
+        bodyContentHtml,
+        data.pageTitle,
+        data.showPageTitleOnAllPage
+      );
 
       this.isLoading = false;
     });
@@ -91,8 +94,8 @@ export class PdfPreviewComponent implements OnInit {
     );
 
     return contentChunks
-      .map((chunk) => {
-        return this._buildPageDiv(chunk);
+      .map((chunk, index) => {
+        return this._buildPageDiv(chunk, index + 1, contentChunks.length);
       })
       .join('');
   }
@@ -140,34 +143,42 @@ export class PdfPreviewComponent implements OnInit {
     return chunks;
   }
 
-  private _buildPageDiv(contentChunk: string): string {
-    const headerHtml = `<div class="header"><img src="${this.headerBase64}"></div>`;
-    const footerHtml = `<div class="footer"><img src="${this.footerBase64}"></div>`;
-
-    let finalContent = contentChunk;
-    if (this.showPageTitleOnAllPage && this.pageTitle) {
-      const titleHtml = `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${this.pageTitle}</div>`;
-      finalContent = titleHtml + contentChunk;
-    }
+  private _buildPageDiv(
+    contentChunk: string,
+    pageNumber: number,
+    totalPages: number
+  ): string {
+    // Perform the placeholder replacement at the very last step
+    const finalFooterHtml = this.footerTemplate
+      .replace('{{PAGE_NUMBER}}', pageNumber.toString())
+      .replace('{{TOTAL_PAGES}}', totalPages.toString());
 
     return `
       <div class="page-container">
-        ${headerHtml}
-        <div class="content-area">${finalContent}</div>
-        ${footerHtml}
+        <div class="header">${this.headerTemplate}</div>
+        <div class="content-area">${contentChunk}</div>
+        <div class="footer">${finalFooterHtml}</div>
       </div>
     `;
   }
 
-  private buildFinalHtmlForServer(bodyContent: string): string {
-    const headerHtml = `<div class="header"><img src="${this.headerBase64}"></div>`;
-    const footerHtml = `<div class="footer"><img src="${this.footerBase64}"></div>`;
+  private buildFinalHtmlForServer(
+    bodyContent: string,
+    pageTitle: string,
+    showTitle: boolean
+  ): string {
+    // This method also needs to be updated to handle the title logic correctly
+    const finalBodyContent =
+      showTitle && pageTitle
+        ? `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${pageTitle}</div>` +
+          bodyContent
+        : bodyContent;
 
-    let finalBodyContent = bodyContent;
-    if (this.showPageTitleOnAllPage && this.pageTitle) {
-      const titleHtml = `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${this.pageTitle}</div>`;
-      finalBodyContent = titleHtml + bodyContent;
-    }
+    // For the server, we use CSS counters for page numbers
+    const serverFooterHtml = this.footerTemplate.replace(
+      'Page {{PAGE_NUMBER}} of {{TOTAL_PAGES}}',
+      'Page <span class="pageNumber"></span> of <span class="totalPages"></span>'
+    );
 
     return `
       <!DOCTYPE html>
@@ -175,18 +186,21 @@ export class PdfPreviewComponent implements OnInit {
         <head>
           <style>
             @page { size: A4 portrait; margin: 0; }
-            body { margin: 0; font-family: sans-serif; }
+            body { margin: 0; font-family: sans-serif; counter-reset: page; }
             .header, .footer { position: fixed; left: 0; right: 0; width: 100%; }
             .header { top: 0; height: ${this.HEADER_H_MM}mm; }
             .footer { bottom: 0; height: ${this.FOOTER_H_MM}mm; }
-            .header img, .footer img { width: 100%; height: 100%; }
+            .header img, .footer img { width: 100%; height: 100%; object-fit: cover; }
             main { padding: ${this.HEADER_H_MM}mm ${this.SIDE_MARGIN_MM}mm ${this.FOOTER_H_MM}mm ${this.SIDE_MARGIN_MM}mm; }
             div, table { page-break-inside: avoid; }
+            .footer .pageNumber::before { content: counter(page); }
+            .footer .totalPages::before { content: counter(pages); }
+            .page-container { page-break-after: always; } /* This helps Puppeteer with breaks */
           </style>
         </head>
         <body>
-          ${headerHtml}
-          ${footerHtml}
+          ${this.headerTemplate}
+          ${serverFooterHtml}
           <main>${finalBodyContent}</main>
         </body>
       </html>
