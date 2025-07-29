@@ -21,7 +21,7 @@
         "header": "Patient Information",
         "isHeaderComponent": true,
         "HeaderValueComponentColumn": 2,
-
+		
         "tableData": {
           "UHID": "13121200000030",
           "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
@@ -36,18 +36,18 @@
       },
       {
         "header": "Brief Patient History",
-        "isTableViewWithLine": true,
+		    "isTableViewWithLine": true,
         "isParagraph": true,
-        "isTitleValueComponent": false,
-        "column": 0,
+		    "isTitleValueComponent": false,
+		    "column": 0,
         "content": "Suffered with diabetes"
       },
       {
         "header": "Chief Complaints",
         "isTableViewWithLine": true,
-        "isParagraph": false,
-        "isTitleValueComponent": false,
-        "column": 0,
+		    "isParagraph": false,
+		    "isTitleValueComponent": false,
+		    "column": 0,
         "tableData": [
           {
             "No.": 1,
@@ -72,9 +72,9 @@
       {
         "header": "ODP/HPI",
         "isTableViewWithLine": true,
-        "isParagraph": false,
-        "isTitleValueComponent": false,
-        "column": 0,
+		"isParagraph": false,
+		"isTitleValueComponent": false,
+		"column": 0,
         "tableData": [
           {
             "No.": 1,
@@ -96,9 +96,9 @@
       {
         "header": "Past Medical History",
         "isTableViewWithLine": true,
-        "isParagraph": false,
-        "isTitleValueComponent": false,
-        "column": 0,
+		"isParagraph": false,
+		"isTitleValueComponent": false,
+		"column": 0,
         "tableData": [
           {
             "No.": 1,
@@ -129,9 +129,9 @@
       {
         "header": "Hospitalization & Surgical History",
         "isTableViewWithLine": false,
-        "isParagraph": false,
-        "isTitleValueComponent": true,
-        "column": 3,
+		"isParagraph": false,
+		"isTitleValueComponent": true,
+		"column": 3,
         "tableData": [
           {
             "No.": 1,

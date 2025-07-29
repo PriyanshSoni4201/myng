@@ -1,0 +1,139 @@
+{
+  "contentItems": [
+    {
+      "component": "document_header",
+      "data": {
+        "headerImage": "https://yourdomain.com/header.png",
+        "title": "CLINICAL ASSESSMENT : CARDIOLOGY SUBSEQUENT CONSULTATION"
+      }
+    },
+    {
+      "component": "patient_info_card",
+      "data": {
+        "name": "Aaradhana Rajeshwaran Balasubramanian",
+        "gender": "F",
+        "age": "35Y 10M",
+        "date": "25-Jun-2025",
+        "time": "18:15",
+        "uhid": "13121200000030",
+        "encounterNo": "RFT-20250618-0423",
+        "address": "Malad East, Mumbai",
+        "diagnosis": "Hypertension & Diabetes",
+        "consultant": "Dr. Abhinav Vapte MD DM",
+        "refBy": "Dr. Anita Sharma",
+        "payer": "Self"
+      }
+    },
+    {
+      "component": "simple_paragraph",
+      "data": {
+        "header": "Brief Patient History",
+        "content": "Suffered with diabetes"
+      }
+    },
+    {
+      "component": "table",
+      "data": {
+        "header": "Chief Complaints",
+        "isTableViewWithLine": true,
+        "columnRatio": [6, 24, 12, 58], 
+        "rows": [
+          {
+            "No.": 1,
+            "Chief Complaint": "Gastrointestinal Neuroendocrine Tumors",
+            "Duration": "5 Days",
+            "Remarks": "The patient reports experiencing a high fever of 101.5°F, accompanied by significant chills, overwhelming fatigue, and a persistent cough."
+          },
+          {
+            "No.": 2,
+            "Chief Complaint": "Cough",
+            "Duration": "3 Days",
+            "Remarks": "The patient reports experiencing chills and profound fatigue. Additionally, they describe occasional chest pain that feels sharp and intensifies with deep breaths."
+          },
+          {
+            "No.": 3,
+            "Chief Complaint": "Chest Pain",
+            "Duration": "12 Days",
+            "Remarks": "The patient is showing signs of chills and notable fatigue. They also mention a dry cough that is persistent and irritating, causing discomfort in the throat and occasionally leading to shortness of breath."
+          }
+        ]
+      }
+    },
+    {
+      "component": "table",
+      "data": {
+        "header": "ODP/HPI",
+        "isTableViewWithLine": true,
+        "columnRatio": [6, 15, 79],
+        "rows": [
+          {
+            "No.": 1,
+            "Date": "24-Dec-2003",
+            "Remarks": "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+          },
+          {
+            "No.": 2,
+            "Date": "24-Dec-2003",
+            "Remarks": "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+          },
+          {
+            "No.": 3,
+            "Date": "04-Jan-2006",
+            "Remarks": "Chest pain began approximately 1 hour ago while at rest, squeezing or pressure in the chest which radiates down the left arm. History of hypertension & high cholesterol. No known allergies. Sedentary lifestyle, moderate alcohol consumption."
+          }
+        ]
+      }
+    },
+    {
+      "component": "table",
+      "data": {
+        "header": "Past Medical History",
+        "isTableViewWithLine": true,
+        "columnRatio": [6, 24, 20, 50],
+        "rows": [
+          { "No.": 1, "Disease": "Diabetes", "Onset Date": "24 Dec 2003", "Remarks": "Uses Pump" },
+          { "No.": 2, "Disease": "Asthma", "Onset Date": "22 Dec 2003", "Remarks": "Occasional Spasms" },
+          { "No.": 3, "Disease": "Diabetes", "Onset Date": "14 Mar 2003", "Remarks": "Uses Pump" },
+          { "No.": 4, "Disease": "Asthma", "Onset Date": "17 Dec 2003", "Remarks": "Occasional Spasms" }
+        ]
+      }
+    },
+    {
+      "component": "key_value_list",
+      "data": {
+        "header": "Hospitalization & Surgical History",
+        "columnRatio": [10, 25, 15, 20, 10, 20],
+        "rows": [
+          { "No.": 1, "Diagnosis": "Heart Failure, Chest Pain", "Diagnosis ICD Code": "126C5", "Care Professional": "Dr. Aarti Mehta", "Care Provider": "Apollo Hospital", "Treatment": "Heart Transplant", "Procedure Date": "24-Feb-2007", "Outcome": "Successful" }
+        ]
+      }
+    },
+    {
+      "component": "page-break"
+    },
+    {
+      "component": "header_title",
+      "data": {
+        "text": "ADDITIONAL PATIENT INFORMATION"
+      }
+    },
+    {
+      "component": "simple_paragraph",
+      "data": {
+        "header": "Lifestyle & Social History",
+        "content": "Patient reports a sedentary lifestyle with moderate alcohol consumption."
+      }
+    },
+    {
+      "component": "table",
+      "data": {
+        "header": "Family History",
+        "columnRatio": [6, 10, 8, 15, 15, 46],
+        "rows": [
+          { "No.": 1, "Relation": "Father", "Current Age": 40, "Disease": "Diabetes", "Onset Age": 30, "Remarks": "Artem Life Care" },
+          { "No.": 2, "Relation": "Grandfather", "Current Age": 58, "Disease": "Hypertension", "Onset Age": 60, "Remarks": "Artem Life Care" }
+        ]
+      }
+    }
+  ]
+}

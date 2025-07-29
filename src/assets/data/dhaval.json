@@ -1,0 +1,265 @@
+{
+       "header": "Brief Patient History",
+              "isTableViewWithLine": true,
+        "isParagraph": true,
+              "isTitleValueComponent": false,
+              "column": 0,
+        "content": "Suffered with diabetes"
+},
+{
+ "header": "Assailants Details",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "assailants Name": "Dr Ahmedabad",
+     "age": 78,
+     "gender": "Male",
+     "relationwithpatient": "Father",
+     "physicalviolenceused": "High",
+     "emotionalviolenceused": "High",
+     "remarks": "any"
+   }
+ ]
+},
+{
+ "header": "Chief Complaints",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "complaint": "Swollen ankles feet and fingers",
+     "since": "1 Week",
+     "duration": 1,
+     "description": ""
+   },
+   {
+     "complaint": "new data",
+     "since": "",
+     "duration": null,
+     "description": ""
+   }
+ ]
+},
+{
+ "header": "ODP/HPI",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "date": "28-Jul-2025",
+     "oPQRST": "new data store"
+   }
+ ]
+},
+{
+ "header": "Past Medical History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "type": "Clinical",
+     "diagnosis": "Abnormal prostate (Prostate Cancer)",
+     "severity": null,
+     "onsetDate": "21-Jul-2025",
+     "status": "Cured",
+     "remarks": "any",
+     "iCD10Code": "A00 Cholera"
+   }
+ ]
+},
+{
+ "header": "Hospitalization & Surgical History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "diagnosis": "Abnormal prostate (Prostate Cancer)",
+     "diagnosis ICD Code": "A00",
+     "treatment": "any",
+     "careProfessional": "Paresh Kanzariya",
+     "care Provider": "A Modern PathLab ThyroCare - ECG",
+     "dOA": "14-Jul-2025",
+     "dOD": "21-Jul-2025",
+     "procedure": "Anti-AChR (Anti-acetylcholine Receptor)",
+     "procedure ICD Code": "-",
+     "surgeon": "Bernard",
+     "dateofSurgery": "16-Jul-2025",
+     "remarks": "any"
+   }
+ ]
+},
+{
+ "header": "Lifestyle & Social History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "lifestyle": "Abdominal Crunches",
+     "parameters": "Minutes Per Day",
+     "status": "Inactive",
+     "remarks": "any"
+   },
+   {
+     "no.": 2,
+     "lifestyle": "Abdominal Crunches",
+     "parameters": "Minutes Per Day",
+     "status": "Active",
+     "remarks": "any"
+   }
+ ]
+},
+{
+ "header": "Lifestyle & Social History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "lifestyle": "Abdominal Crunches",
+     "parameters": "Minutes Per Day",
+     "status": "Inactive",
+     "remarks": "any"
+   },
+   {
+     "no.": 2,
+     "lifestyle": "Abdominal Crunches",
+     "parameters": "Minutes Per Day",
+     "status": "Active",
+     "Remarks": "any"
+   }
+ ]
+},
+{
+ "header": "Family History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "relation": "Brother in law",
+     "age": 27,
+     "disease": "Abnormal prostate (Prostate Cancer)",
+     "onsetDate": "28-Jul-2001",
+     "remarks": "any"
+   }
+ ]
+},
+{
+ "header": "Allergies & Hypersensitivity",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "allergy": "Dental Products",
+     "allergen": "Tooth Paste",
+     "typeofReaction": "Allergic Shiners",
+     "onsetDate": "27-Jul-2025",
+     "severity": "Medium",
+     "status": "Active",
+     "remarks": "-"
+   }
+ ]
+},
+{
+ "header": "Previous Investigation",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "date": "28-Jul-2025",
+     "investigation": "new data"
+   }
+ ]
+},
+{
+ "header": "Review Of System",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "no.": 1,
+     "date": "28-Jul-2025",
+     "review of System": "very very good system"
+   }
+ ]
+},
+{
+ "header": "Paediatric History",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "onSetDate": "28-Jul-2025",
+     "paediatric History": {
+       "injuryatBirth?": "No",
+       "remarks": "any",
+       "dateofBirth": "24-Sep-2001",
+       "checkboxQuestion": "1, 2",
+       "c-section Birth?": "No",
+       "pain Score": 1,
+       "pain Score (text)": "Minimal Pain",
+       "injury Details": "any"
+     }
+   }
+ ]
+},
+{
+ "header": "final",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "onSetDate": "28-Jul-2025",
+     "iMP": "01-Jul-2025"
+   }
+ ]
+},
+{
+ "header": "final",
+ "isTableViewWithLine": true,
+ "isParagraph": false,
+ "isTitleValueComponent": false,
+ "column": 0,
+ "content": [
+   {
+     "onSetDate": "28-Jul-2025",
+     "lMP": "27-Jul-2025",
+     "exposuretoRadiation/Harmful Chemicals": "No",
+     "duration (Days)": 3
+   }
+ ]
+},
