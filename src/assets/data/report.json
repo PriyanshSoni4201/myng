@@ -10,21 +10,43 @@
   "contentMaster": {
     "contentItems": [
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15",
-          "Payer Class": "Self"
-        }
+        "header": "Hospitalization & Surgical History",
+        "isTableViewWithLine": false,
+        "isParagraph": false,
+        "isTitleValueComponent": true,
+        "column": 3,
+        "tableData": [
+          {
+            "No.": 1,
+            "Diagnosis": "Heart Failure, Chest Pain",
+            "Diagnosis ICD Code": "12C65",
+            "Treatment": "Heart Transplant",
+            "Care Professional": "Dr. Aarti Mehta",
+            "Care Provider": "Apollo Hospital",
+            "DOA": "24-Feb-2007",
+            "DOD": "04-Mar-2007",
+            "Procedure": "Bypass",
+            "Procedure ICD Code": "12C65",
+            "Surgeon": "Dr. Aarti Mehta",
+            "Date of Surgery": "28-Feb-2007",
+            "Remarks": "Operation successful"
+          },
+          {
+            "No.": 2,
+            "Diagnosis": "Heart Failure, Chest Pain",
+            "Diagnosis ICD Code": "12C65",
+            "Treatment": "Heart Transplant",
+            "Care Professional": "Dr. Aarti Mehta",
+            "Care Provider": "Apollo Hospital",
+            "DOA": "24-Feb-2007",
+            "DOD": "04-Mar-2007",
+            "Procedure": "Bypass",
+            "Procedure ICD Code": "12C65",
+            "Surgeon": "Dr. Aarti Mehta",
+            "Date of Surgery": "28-Feb-2007",
+            "Remarks": "Operation successful"
+          }
+        ]
       }
     ]
   }
