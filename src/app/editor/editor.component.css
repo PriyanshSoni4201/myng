@@ -88,14 +88,6 @@
   .p-editor-toolbar
   .ql-snow
   .ql-formats
-  button:hover
-  .ql-fill,
-:host
-  ::ng-deep
-  .p-editor
-  .p-editor-toolbar
-  .ql-snow
-  .ql-formats
   button.ql-active
   .ql-fill {
   fill: #ffffff;

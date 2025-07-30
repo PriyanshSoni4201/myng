@@ -1,3 +1,4 @@
+// server.ts
 import express from "express";
 import puppeteer from "puppeteer";
 import cors from "cors";
@@ -21,24 +22,28 @@ app.post("/api/generate-pdf", async (req, res) => {
     });
     const page = await browser.newPage();
 
-    // Step 1: Set the HTML content. We still use 'load' as a good starting point.
-    await page.setContent(html, { waitUntil: "load" });
+    // Set content and wait for network to be idle
+    await page.setContent(html, { waitUntil: "networkidle0" });
 
-    // Step 2: THE CRITICAL FIX - Explicitly wait for all images to be fully rendered.
-    // This function runs inside the browser and tells Puppeteer to wait until
-    // every single <img> tag has finished decoding and has a real size.
+    // Wait for all images to be loaded
     await page.waitForFunction(
       () =>
         Array.from(document.querySelectorAll("img")).every(
           (img) => img.complete && img.naturalWidth > 0
         ),
       { timeout: 10000 }
-    ); // Add a generous timeout of 10 seconds
+    );
 
-    // Step 3: Now that we are certain the images are rendered, generate the PDF.
+    // Generate PDF, Puppeteer will automatically paginate based on page-break-after and element sizes
     const pdfBuffer = await page.pdf({
-      format: "A4",
+      format: "A4", // This format can be explicitly set based on the request body if needed, but the HTML will drive the layout.
       printBackground: true,
+      // margin: { // Margins can be set here if the HTML doesn't account for them via padding/positioning
+      //   top: '0',
+      //   right: '0',
+      //   bottom: '0',
+      //   left: '0',
+      // },
     });
 
     await browser.close();
@@ -48,7 +53,6 @@ app.post("/api/generate-pdf", async (req, res) => {
     res.send(pdfBuffer);
   } catch (error) {
     console.error("Error generating PDF:", error);
-    // Provide more detailed error feedback to the client
     if (error instanceof puppeteer.TimeoutError) {
       res
         .status(500)

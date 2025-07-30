@@ -1,4 +1,3 @@
-// src/app/services/pdf.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { jsPDF } from 'jspdf';
@@ -13,26 +12,30 @@ export class PdfService {
   constructor(private http: HttpClient) {}
 
   public async generatePdfClientSide(
-    pages: string[],
-    windowWidth: number,
+    finalHtml: string,
     filename: string = 'report-jspdf.pdf'
   ): Promise<void> {
     const pdfOptions = { unit: 'mm', format: 'a4', orientation: 'p' } as const;
     const doc = new jsPDF(pdfOptions);
     const pageW_mm = doc.internal.pageSize.getWidth();
 
-    for (let i = 0; i < pages.length; i++) {
+    // Parse the final HTML to get individual pages
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(finalHtml, 'text/html');
+    const pageElements = htmlDoc.querySelectorAll('.page-container');
+
+    for (let i = 0; i < pageElements.length; i++) {
       if (i > 0) doc.addPage();
-      await doc.html(pages[i], {
+      await doc.html(pageElements[i] as HTMLElement, {
         autoPaging: false,
         x: 0,
         y: 0,
         width: pageW_mm,
-        windowWidth: windowWidth,
+        windowWidth: 700, // A fixed window width for consistent scaling
       });
     }
 
-    if (pages.length > 0) doc.deletePage(1);
+    if (pageElements.length > 0) doc.deletePage(1); // jsPDF adds a blank first page
     doc.save(filename);
   }
 

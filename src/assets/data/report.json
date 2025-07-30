@@ -5,13 +5,9 @@
   "footer": {
     "footerImage": "data:image/jpeg;base64,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"
   },
-  "signatureFooter": {
-    "listOfDoctors": ["Dr. Anita Sharma", "Dr. Aarti Mehta"],
-    "number": "Signatory Ref #12345678",
-    "datetime": "25-Jun-2025 18:15"
-  },
   "pageTitle": "Cardiology Consultation Summary",
   "showPageTitleOnAllPage": true,
+  "paperFormat": "A4",
   "contentMaster": {
     "contentItems": [
       {
@@ -20,191 +16,35 @@
         "HeaderValueComponentColumn": 2,
         "tableData": {
           "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
           "Encounter No.": "RFT-20250618-0423",
+          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
           "Ref. By": "Dr. Anita Sharma",
+          "Address": "Malad East, Mumbai",
           "Date": "25-Jun-2025",
-          "Time": "18:15"
+          "Encounter Type": "Asymptomatic Follow",
+          "Time": "18:15",
+          "Diagnosis": "Hypertension & Diabetes"
         }
       },
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
+        "header": "Consultation Notes",
+        "content": "Patient presented with controlled hypertension and stable diabetes. Advised regular follow-up and continuation of current medication. No new complaints. Blood pressure 120/80 mmHg. Blood sugar (Fasting) 100 mg/dL. HbA1c 6.5%. ECG normal. Refer to dietetics for further management of diabetes. Follow up in 3 months. Continue medication: Telmisartan 40mg OD, Metformin 500mg BID."
       },
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
+        "header": "Medications",
+        "content": "Telmisartan 40mg - Once daily\nMetformin 500mg - Twice daily"
       },
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
+        "header": "Investigations",
+        "content": "ECG - Normal\nBlood Pressure - 120/80 mmHg\nBlood Sugar (Fasting) - 100 mg/dL\nHbA1c - 6.5%"
       },
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
+        "header": "Recommendations",
+        "content": "Continue current medications.\nRegular follow-up every 3 months.\nDietary consultation for diabetes management.\nEncourage regular exercise."
       },
       {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
-      },
-      {
-        "header": "Patient Information",
-        "isHeaderComponent": true,
-        "HeaderValueComponentColumn": 2,
-        "tableData": {
-          "UHID": "13121200000030",
-          "Name": "Aaradhana Rajeshwaran Balasubramanian (F / 35Y 10M)",
-          "Address": "Malad East, Mumbai",
-          "Encounter Type": "Asymptomatic Follow",
-          "Diagnosis": "Hypertension & Diabetes",
-          "Encounter No.": "RFT-20250618-0423",
-          "Ref. By": "Dr. Anita Sharma",
-          "Date": "25-Jun-2025",
-          "Time": "18:15"
-        }
+        "header": "Next Appointment",
+        "content": "25-Sep-2025 at 10:00 AM"
       }
     ]
   }

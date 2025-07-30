@@ -1,4 +1,3 @@
-
 /* src/app/pdf-preview/pdf-preview.component.css */
 .generator-container {
   display: flex;
@@ -20,11 +19,7 @@
 
 .preview-area {
   flex-grow: 1;
-  padding: 24px;
   overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .loading-spinner {
@@ -34,7 +29,7 @@
   width: 60px;
   height: 60px;
   animation: spin 2s linear infinite;
-  margin-top: 50px;
+  margin: 50px auto;
 }
 
 @keyframes spin {
@@ -46,48 +41,8 @@
   }
 }
 
-:host ::ng-deep .page-container {
-  position: relative;
-  width: 210mm;
-  height: 297mm;
-  background-color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid #ced4da;
-  overflow: hidden;
-  margin-bottom: 24px;
-  box-sizing: border-box;
-}
-
-:host ::ng-deep .page-header-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 35mm;
-  overflow: hidden;
-}
-
-:host ::ng-deep .page-body-content {
-  position: absolute;
-  top: 35mm;
-  bottom: 30mm;
-  left: 10mm;
-  right: 10mm;
-  overflow: hidden;
-}
-
-:host ::ng-deep .page-footer-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30mm;
-  overflow: hidden;
-}
-
-:host ::ng-deep .page-header-content img,
-:host ::ng-deep .page-footer-content img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* 
+  All page styles (.page-container, etc.) are now injected directly into the HTML
+  by the HtmlGeneratorService, so they are no longer needed here.
+  Using ::ng-deep is not required anymore for the preview.
+*/
