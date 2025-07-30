@@ -15,21 +15,16 @@
 }
 
 .preview-document {
-  position: relative; /* Establishes a positioning context for children */
+  position: relative;
   width: 100%;
   max-width: 600px;
-  aspect-ratio: 1 / 1.4142; /* A4 paper ratio */
+  aspect-ratio: 1 / 1.4142;
   border: 1px solid #d0d0d0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   box-sizing: border-box;
-  overflow: hidden; /* Clips the content and background to the document bounds */
+  overflow: hidden;
 }
-
-/* 
-Since the background and content are injected via [innerHTML], we use ::ng-deep 
-to pierce style encapsulation and apply styles to them. 
-*/
 
 :host ::ng-deep .preview-background {
   position: absolute;
@@ -40,14 +35,14 @@ to pierce style encapsulation and apply styles to them.
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 0; /* Places the background behind the content */
+  z-index: 0;
 }
 
 :host ::ng-deep .content-wrapper {
-  position: relative; /* Allows z-index to take effect */
-  z-index: 1; /* Places the content on top of the background */
-  padding: 20px; /* Provides some spacing from the edges */
+  position: relative;
+  z-index: 1;
+  padding: 20px;
   height: 100%;
   box-sizing: border-box;
-  overflow-y: auto; /* Adds a scrollbar if content overflows */
+  overflow-y: auto;
 }

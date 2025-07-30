@@ -1,3 +1,5 @@
+
+/* src/app/pdf-preview/pdf-preview.component.css */
 .generator-container {
   display: flex;
   flex-direction: column;
@@ -53,17 +55,19 @@
   border: 1px solid #ced4da;
   overflow: hidden;
   margin-bottom: 24px;
+  box-sizing: border-box;
 }
 
-:host ::ng-deep .header {
+:host ::ng-deep .page-header-content {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 35mm;
+  overflow: hidden;
 }
 
-:host ::ng-deep .content-area {
+:host ::ng-deep .page-body-content {
   position: absolute;
   top: 35mm;
   bottom: 30mm;
@@ -72,16 +76,18 @@
   overflow: hidden;
 }
 
-:host ::ng-deep .footer {
+:host ::ng-deep .page-footer-content {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 30mm;
+  overflow: hidden;
 }
 
-:host ::ng-deep .header img,
-:host ::ng-deep .footer img {
+:host ::ng-deep .page-header-content img,
+:host ::ng-deep .page-footer-content img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }

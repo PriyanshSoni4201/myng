@@ -1,16 +1,17 @@
+// src/app/pdf-preview/pdf-preview.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { HtmlGeneratorService } from '../services/html-generator.service';
 import { PdfService } from '../services/pdf.service';
-import { TemplateLibraryService } from '../services/template-library.service'; // We need this for the body content
+import { TemplateLibraryService } from '../services/template-library.service';
 
 @Component({
   selector: 'app-pdf-preview',
   standalone: true,
   imports: [CommonModule],
-  providers: [TemplateLibraryService], // Provide the library service
+  providers: [TemplateLibraryService],
   templateUrl: './pdf-preview.component.html',
   styleUrls: ['./pdf-preview.component.css'],
 })
@@ -26,7 +27,6 @@ export class PdfPreviewComponent implements OnInit {
   private footerTemplate: string = '';
 
   private finalPaginatedHtml: string = '';
-  private finalServerHtml: string = '';
 
   public safeHtmlForPreview: SafeHtml = '';
   public isLoading = true;
@@ -40,28 +40,20 @@ export class PdfPreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get<any>('assets/data/report.json').subscribe((data) => {
-      // 1. Generate the header and footer TEMPLATES
       this.headerTemplate = this.htmlGenerator.generateHeaderHtml(data.header);
       this.footerTemplate = this.htmlGenerator.generateFooterHtml(data.footer);
 
-      // 2. Generate the raw BODY content
       const bodyContentHtml = this.htmlGenerator.generateBodyHtml(
-        data.contentMaster.contentItems,
-        data.pageTitle,
-        data.showPageTitleOnAllPage
+        data.contentMaster.contentItems
       );
 
-      // 3. Paginate the body and construct the final page divs
-      this.finalPaginatedHtml = this.constructPaginatedHtml(bodyContentHtml);
-      this.safeHtmlForPreview = this.sanitizer.bypassSecurityTrustHtml(
-        this.finalPaginatedHtml
-      );
-
-      // 4. Build the separate HTML for the server
-      this.finalServerHtml = this.buildFinalHtmlForServer(
+      this.finalPaginatedHtml = this.constructPaginatedHtml(
         bodyContentHtml,
         data.pageTitle,
         data.showPageTitleOnAllPage
+      );
+      this.safeHtmlForPreview = this.sanitizer.bypassSecurityTrustHtml(
+        this.finalPaginatedHtml
       );
 
       this.isLoading = false;
@@ -78,10 +70,16 @@ export class PdfPreviewComponent implements OnInit {
   }
 
   public downloadWithServer(): void {
-    this.pdfService.generatePdfServerSide(this.finalServerHtml);
+    this.pdfService.generatePdfServerSide(
+      this.buildFinalHtmlForServer(this.finalPaginatedHtml)
+    );
   }
 
-  private constructPaginatedHtml(bodyContentHtml: string): string {
+  private constructPaginatedHtml(
+    bodyContentHtml: string,
+    pageTitle: string,
+    showTitleOnAllPages: boolean
+  ): string {
     const pxPerMm = this.PREVIEW_WIDTH_PX / this.PAGE_W_MM;
     const contentW_px = (this.PAGE_W_MM - this.SIDE_MARGIN_MM * 2) * pxPerMm;
     const contentH_px =
@@ -95,7 +93,13 @@ export class PdfPreviewComponent implements OnInit {
 
     return contentChunks
       .map((chunk, index) => {
-        return this._buildPageDiv(chunk, index + 1, contentChunks.length);
+        return this._buildPageDiv(
+          chunk,
+          index + 1,
+          contentChunks.length,
+          pageTitle,
+          showTitleOnAllPages
+        );
       })
       .join('');
   }
@@ -146,62 +150,86 @@ export class PdfPreviewComponent implements OnInit {
   private _buildPageDiv(
     contentChunk: string,
     pageNumber: number,
-    totalPages: number
+    totalPages: number,
+    pageTitle: string,
+    showTitleOnAllPages: boolean
   ): string {
-    // Perform the placeholder replacement at the very last step
     const finalFooterHtml = this.footerTemplate
       .replace('{{PAGE_NUMBER}}', pageNumber.toString())
       .replace('{{TOTAL_PAGES}}', totalPages.toString());
 
+    const titleHtml =
+      showTitleOnAllPages && pageTitle
+        ? `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${pageTitle}</div>`
+        : '';
+
     return `
       <div class="page-container">
-        <div class="header">${this.headerTemplate}</div>
-        <div class="content-area">${contentChunk}</div>
-        <div class="footer">${finalFooterHtml}</div>
+        <div class="page-header-content">${this.headerTemplate}</div>
+        <div class="page-body-content">${titleHtml}${contentChunk}</div>
+        <div class="page-footer-content">${finalFooterHtml}</div>
       </div>
     `;
   }
 
-  private buildFinalHtmlForServer(
-    bodyContent: string,
-    pageTitle: string,
-    showTitle: boolean
-  ): string {
-    // This method also needs to be updated to handle the title logic correctly
-    const finalBodyContent =
-      showTitle && pageTitle
-        ? `<div style="text-align: center; font-family: sans-serif; font-size: 16px; font-weight: bold; margin-bottom: 15px;">${pageTitle}</div>` +
-          bodyContent
-        : bodyContent;
-
-    // For the server, we use CSS counters for page numbers
-    const serverFooterHtml = this.footerTemplate.replace(
-      'Page {{PAGE_NUMBER}} of {{TOTAL_PAGES}}',
-      'Page <span class="pageNumber"></span> of <span class="totalPages"></span>'
-    );
-
+  private buildFinalHtmlForServer(paginatedHtml: string): string {
     return `
       <!DOCTYPE html>
       <html>
         <head>
           <style>
-            @page { size: A4 portrait; margin: 0; }
-            body { margin: 0; font-family: sans-serif; counter-reset: page; }
-            .header, .footer { position: fixed; left: 0; right: 0; width: 100%; }
-            .header { top: 0; height: ${this.HEADER_H_MM}mm; }
-            .footer { bottom: 0; height: ${this.FOOTER_H_MM}mm; }
-            .header img, .footer img { width: 100%; height: 100%; object-fit: cover; }
-            main { padding: ${this.HEADER_H_MM}mm ${this.SIDE_MARGIN_MM}mm ${this.FOOTER_H_MM}mm ${this.SIDE_MARGIN_MM}mm; }
-            div, table { page-break-inside: avoid; }
-            .footer .pageNumber::before { content: counter(page); }
-            .footer .totalPages::before { content: counter(pages); }
-            .page-container { page-break-after: always; } /* This helps Puppeteer with breaks */
+            body { margin: 0; font-family: sans-serif; }
+
+            .page-container {
+                position: relative;
+                width: ${this.PAGE_W_MM}mm;
+                height: ${this.PAGE_H_MM}mm;
+                background-color: white;
+                overflow: hidden;
+                page-break-after: always;
+                box-sizing: border-box;
+            }
+            .page-container:last-child {
+                page-break-after: auto;
+            }
+
+            .page-header-content {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: ${this.HEADER_H_MM}mm;
+                overflow: hidden;
+            }
+
+            .page-body-content {
+                position: absolute;
+                top: ${this.HEADER_H_MM}mm;
+                bottom: ${this.FOOTER_H_MM}mm;
+                left: ${this.SIDE_MARGIN_MM}mm;
+                right: ${this.SIDE_MARGIN_MM}mm;
+                overflow: hidden;
+            }
+
+            .page-footer-content {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: ${this.FOOTER_H_MM}mm;
+                overflow: hidden;
+            }
+
+            .page-header-content img,
+            .page-footer-content img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
           </style>
         </head>
         <body>
-          ${this.headerTemplate}
-          ${serverFooterHtml}
-          <main>${finalBodyContent}</main>
+          ${paginatedHtml}
         </body>
       </html>
     `;
