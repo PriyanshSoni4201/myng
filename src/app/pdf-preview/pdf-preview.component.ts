@@ -9,7 +9,7 @@ import { PdfService } from '../services/pdf.service';
   selector: 'app-pdf-preview',
   standalone: true,
   imports: [CommonModule, HttpClientModule],
-  providers: [PdfService, HtmlGeneratorService], // TemplateLibraryService is used by HtmlGeneratorService
+  providers: [PdfService, HtmlGeneratorService], 
   templateUrl: './pdf-preview.component.html',
   styleUrls: ['./pdf-preview.component.css'],
 })
