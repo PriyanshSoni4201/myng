@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// FIX: Correct the import name here if it was also misspelled
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { HtmlGeneratorService } from '../services/html-generator.service';
 import { PdfService } from '../services/pdf.service';
 
 @Component({
   selector: 'app-pdf-preview',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
-  providers: [PdfService, HtmlGeneratorService], 
+  imports: [CommonModule],
   templateUrl: './pdf-preview.component.html',
   styleUrls: ['./pdf-preview.component.css'],
 })
@@ -19,6 +19,7 @@ export class PdfPreviewComponent implements OnInit {
   public isLoading = true;
 
   constructor(
+    // FIX: Correct the spelling from 'DomSanititizer' to 'DomSanitizer'
     private sanitizer: DomSanitizer,
     private http: HttpClient,
     private htmlGenerator: HtmlGeneratorService,
@@ -27,22 +28,37 @@ export class PdfPreviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get<any>('assets/data/report.json').subscribe((reportData) => {
-      // Step 1: Generate the unpaginated body content to be measured.
-      const unpaginatedBody = this.htmlGenerator.generateUnpaginatedBodyHtml(
-        reportData.contentMaster.contentItems
-      );
+      const data = reportData.pdfData || reportData;
 
-      // Step 2: Perform the pagination measurement. This MUST happen here
-      // because it needs access to the browser's DOM.
+      let allContentItems: any[] = [];
+      if (data.contentMaster && Array.isArray(data.contentMaster.sections)) {
+        data.contentMaster.sections.forEach((section: any, index: number) => {
+          if (Array.isArray(section.contentItems)) {
+            if (index > 0) {
+              allContentItems.push({ contentType: 'PageBreak' });
+            }
+            allContentItems = allContentItems.concat(section.contentItems);
+          }
+        });
+      }
+
+      if (data.signatureFooter) {
+        allContentItems.push({
+          contentType: 'Signature',
+          tableData: data.signatureFooter,
+        });
+      }
+
+      const unpaginatedBody =
+        this.htmlGenerator.generateUnpaginatedBodyHtml(allContentItems);
+
       const contentChunks = this._paginateContentUsingDom(unpaginatedBody);
 
-      // Step 3: Call the generator service to build the final, complete HTML document.
       this.finalReportHtml = this.htmlGenerator.generatePaginatedReportHtml(
-        reportData,
+        data,
         contentChunks
       );
 
-      // Step 4: Display the result.
       this.safeHtmlForPreview = this.sanitizer.bypassSecurityTrustHtml(
         this.finalReportHtml
       );
@@ -84,6 +100,16 @@ export class PdfPreviewComponent implements OnInit {
 
     let currentPageNodes: Node[] = [];
     Array.from(source.children).forEach((element: Element) => {
+      if (element.classList.contains('pdf-page-break')) {
+        if (currentPageNodes.length > 0) {
+          const chunkContainer = document.createElement('div');
+          currentPageNodes.forEach((n) => chunkContainer.appendChild(n));
+          chunks.push(chunkContainer.innerHTML);
+        }
+        currentPageNodes = [];
+        return;
+      }
+
       measurementDiv.innerHTML = '';
       currentPageNodes.forEach((n) =>
         measurementDiv.appendChild(n.cloneNode(true))

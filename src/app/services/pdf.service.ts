@@ -19,10 +19,10 @@ export class PdfService {
     const doc = new jsPDF(pdfOptions);
     const pageW_mm = doc.internal.pageSize.getWidth();
 
-    // Parse the final HTML to get individual pages
+    // Parse the final HTML to get individual page-container elements
     const parser = new DOMParser();
     const htmlDoc = parser.parseFromString(finalHtml, 'text/html');
-    const pageElements = htmlDoc.querySelectorAll('.page-container');
+    const pageElements = htmlDoc.querySelectorAll('.page-container'); // Selects each independent page div
 
     for (let i = 0; i < pageElements.length; i++) {
       if (i > 0) doc.addPage();
@@ -31,7 +31,7 @@ export class PdfService {
         x: 0,
         y: 0,
         width: pageW_mm,
-        windowWidth: 700, // A fixed window width for consistent scaling
+        windowWidth: 700, // A fixed window width for consistent scaling from preview
       });
     }
 
