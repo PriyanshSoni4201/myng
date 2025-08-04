@@ -95,7 +95,7 @@ export class HtmlGeneratorService {
 
   private _wrapInRootDocument(pageHtml: string): string {
     const headerHeight = 35;
-    const footerHeight = 20;
+    const footerHeight = 15;
     const sideMargin = 10;
 
     return `
